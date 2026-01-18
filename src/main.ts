@@ -1,15 +1,25 @@
 import p5 from 'p5';
-import {GraphRenderer, type ValueType, type RenderType } from './graph';
+import {GraphRenderer, type ValueType, type RenderType, type Percentage, type Number , type GraphData} from './graph';
 
 const sketch = (p: p5) => {
     let g: GraphRenderer;
+    let d: GraphData;
 
     p.setup = () => {
         const canvas = p.createCanvas(p.windowWidth, p.windowHeight);
         canvas.parent("#p5-container");
         p.frameRate(120);   
 
-        g = new GraphRenderer('Block', 'Numerical');
+        const t: Number = {};
+        d = {
+            valueType: t,
+            entries: ['Maria', 'Jonathan', 'Jona', 'Janis', 'Valeria', 'Finn'],
+            values: [
+                [10, 3, 4], [5, 4, 3], [4, 2, 3], [5, 4, 6], [7, 2, 6], [10, 1, 2],
+            ],
+            colors: ['#EBF4DD', '#90AB8B', '#5A7863'],
+        } 
+        g = new GraphRenderer('Block', d);
     };
 
     p.draw = () => {

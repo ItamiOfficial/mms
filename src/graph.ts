@@ -1,45 +1,48 @@
 import p5 from 'p5'; 
 import { styles, type Style } from './style';
 
-export type RenderType = "Line" | "Block";
-export type ValueType = "Numerical" | "Assignment";
+export type Percentage = {
 
+}
+
+export type Number = {
+
+}
+
+export type ValueType = Percentage | Number;
+export type RenderType = "Line" | "Block";
+
+export type GraphData = {
+    valueType: ValueType,
+    entries: string[],
+    values: number[][], // outer array are the entries, inner array are the actual values per entry
+    colors: string[],
+}
 
 export class GraphRenderer {
     public rt: RenderType;  
-    public vt: ValueType;
+    public data: GraphData;
     public style: Style;
 
     private cornerRounding: number = 0;
     private axisPadding: number = 80;
     private axisSize: number = 7;
-    private namePadding: number = 10;
+    private barSize: number = 0.02;
 
-    private valueRangeNames: Array<string> = [
-        '0 %',
-        '25 %',
-        '50 %',
-        '75 %',
-        '100 %',
-    ];
-    private valueOriginNames: Array<Array<string>> = [
-        ['Manuel'],
-        ['Dominik'],
-        ['Johannes'],
-    ]
-
-    public constructor(rt: RenderType, vt: ValueType) {
+    public constructor(rt: RenderType, data: GraphData) {
         this.rt = rt;
-        this.vt = vt;
+        this.data = data;
         this.style = styles.Default;
     }
 
     render(p: p5) {
         this.drawBackground(p);
+        this.drawGraph(p);
         this.drawAxis(p);
+
     }
 
-    drawBackground(p: p5) {
+    private drawBackground(p: p5) {
         p.background(0, 0, 0, 0);
         p.noStroke();
         p.fill(this.style.background);
@@ -47,7 +50,7 @@ export class GraphRenderer {
         p.rect(0, 0, p.width, p.height, this.cornerRounding);
     }
 
-    drawAxis(p: p5) {
+    private drawAxis(p: p5) {
         p.noStroke();
         p.fill(this.style.axis);
         p.rectMode(p.CORNERS);
@@ -68,26 +71,51 @@ export class GraphRenderer {
             this.axisPadding + this.axisSize * 0.5,
             this.axisPadding
         );
+    }
 
-        // Y-Axis Names
-        p.textAlign(p.RIGHT, p.CENTER);
-        p.textSize(12);
-        const dist = (p.height - this.axisPadding * 2) / (this.valueRangeNames.length);
-        for (let i: number = 0; i < this.valueRangeNames.length; i++) {
-            p.text(
-                this.valueRangeNames[i],
-                this.axisPadding - this.namePadding, 
-                p.height - this.axisPadding - i * dist,
-            );
+    private drawGraph(p: p5) {
+        // == Calculate Entry Poisitions == \\
+        let barSize = p.width * this.barSize;
+        const entryDistance = (p.width - this.axisPadding * 2) / this.data.values.length;
+        const edgeOffset = entryDistance / 2;
+        const barDistance: number = barSize * 1.5;
+        const barOffset: number = -barDistance * this.data.values[0].length * 0.5;
+
+        // == Calculate Value Space == \\
+        let minValue = Infinity;
+        let maxValue = 0;
+
+        for (let i = 0; i < this.data.values.length; i++) {
+            minValue = Math.min(minValue, ...this.data.values[i]);
+            maxValue = Math.max(maxValue, ...this.data.values[i]);
+        }
+        minValue = Math.min(0, minValue);
+        
+        // == Render Values == \\
+        if (this.rt == 'Block') {
+            for (let i = 0; i < this.data.values.length; i++) {
+                for (let j = 0; j < this.data.values[i].length; j++) {
+                    p.noStroke();
+                    p.rectMode(p.CORNER)
+                    p.fill(this.data.colors[j]);
+                    p.rect(
+                        this.axisPadding + edgeOffset + entryDistance * i + barOffset + barDistance * j,
+                        p.height - this.axisPadding,
+                        barSize,
+                        -1 * p.map(
+                            this.data.values[i][j],
+                            minValue,
+                            maxValue,
+                            0,
+                            p.height - this.axisPadding * 2
+                        ),
+                    );
+                }
+            }
         }
     }
 
-    drawValues() {
-
-    }
-}
-
-type GraphPlottingData = {
+    
 
 }
 
