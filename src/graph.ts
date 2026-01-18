@@ -36,6 +36,10 @@ export class GraphRenderer {
     }
 
     render(p: p5) {
+        let min = Math.min(p.width, p.height);
+        this.axisPadding = min * 0.1;
+        this.axisSize = min * 0.01;
+
         this.drawBackground(p);
         this.drawGraph(p);
         this.drawAxis(p);
@@ -110,6 +114,40 @@ export class GraphRenderer {
                             p.height - this.axisPadding * 2
                         ),
                     );
+                }
+            }
+        }
+
+        else if (this.rt == 'Line') {
+            let previous: any = [];
+            let ms = Math.min(p.width, p.height);
+
+            for (let i = 0; i < this.data.values.length; i++) {
+                for (let j = 0; j < this.data.values[i].length; j++) {
+                    let x = edgeOffset + this.axisPadding + i * entryDistance;
+                    let y = p.height - this.axisPadding - p.map(
+                            this.data.values[i][j],
+                            minValue,
+                            maxValue,
+                            0,
+                            p.height - this.axisPadding * 2
+                        );
+
+                    p.stroke(this.data.colors[j]);
+
+                    if(i > 0) {
+                        p.strokeWeight(ms * 0.008);
+                        p.line(x, y, previous[(i - 1) * 3 + j].x, previous[(i - 1) * 3 + j].y);
+                    }
+
+                    p.rectMode(p.CORNER)
+                    p.strokeWeight(ms * 0.024);
+                    p.point(x, y);
+
+                    previous.push({
+                        x: x,
+                        y: y,
+                    })
                 }
             }
         }

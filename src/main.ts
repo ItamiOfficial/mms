@@ -17,9 +17,9 @@ const sketch = (p: p5) => {
             values: [
                 [10, 3, 4], [5, 4, 3], [4, 2, 3], [5, 4, 6], [7, 2, 6], [10, 1, 2],
             ],
-            colors: ['#EBF4DD', '#90AB8B', '#5A7863'],
+            colors: ['#e3795bff', '#e0a566ff', '#e6c681ff'],
         } 
-        g = new GraphRenderer('Block', d);
+        g = new GraphRenderer('Line', d);
     };
 
     p.draw = () => {
