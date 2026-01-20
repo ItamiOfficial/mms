@@ -1,5 +1,37 @@
 import p5 from 'p5'; 
-import { styles, type Style } from './style';
+
+type Style = {
+    background: string,
+    axis: string,
+    grid: string,
+    tertiary: string,
+};
+
+const styles: Record<string, Style> = {
+    Default : // https://colorhunt.co/palette/1b211a6281418bae66ebd5ab
+    {
+        background: '#3B4953',
+        axis: '#5A7863',
+        grid: '#90AB8B',
+        tertiary: 'rgb(235, 213, 171)',
+    },
+}
+
+type Vec2D = {
+    x: number,
+    y: number,
+}
+
+type Line = {
+    p1: Vec2D,
+    p2: Vec2D,
+    thickness: number,
+}
+
+type Rect = {
+    p1: Vec2D,
+    p2: Vec2D,
+}
 
 export type Percentage = {
 
@@ -17,144 +49,166 @@ export type GraphData = {
     entries: string[],
     values: number[][], // outer array are the entries, inner array are the actual values per entry
     colors: string[],
+    valueCount: number,
 }
 
 export class GraphRenderer {
+    private p: p5;
     public rt: RenderType;  
     public data: GraphData;
-    public style: Style;
 
-    private cornerRounding: number = 0;
-    private axisPadding: number = 80;
-    private axisSize: number = 7;
+    // Styling
+    private backgroundRounding: number = 0;
+    public style: Style;
+    private drawGrid: boolean = true;
+
+    // Scalings
+    private padding: number = 0.1;
+    private axisSize: number = 0.009;
+    private gridSize: number = 0.004;
     private barSize: number = 0.02;
 
-    public constructor(rt: RenderType, data: GraphData) {
+
+    public constructor(rt: RenderType, data: GraphData, p: p5) {
+        this.p = p;
         this.rt = rt;
         this.data = data;
         this.style = styles.Default;
     }
 
-    render(p: p5) {
-        let min = Math.min(p.width, p.height);
-        this.axisPadding = min * 0.1;
-        this.axisSize = min * 0.01;
+    // == Section: Rendering == \\
 
-        this.drawBackground(p);
-        this.drawGraph(p);
-        this.drawAxis(p);
-
+    render() {
+        this.drawBackground();
+        this.drawAxis();
     }
 
-    private drawBackground(p: p5) {
-        p.background(0, 0, 0, 0);
-        p.noStroke();
-        p.fill(this.style.background);
-        p.rectMode(p.CORNER);
-        p.rect(0, 0, p.width, p.height, this.cornerRounding);
+    private drawBackground() {
+        this.p.background(0,0,0,0);
+        this.p.noStroke();
+        this.p.fill(this.style.background);
+        this.p.rect(0, 0, this.p.width, this.p.height, this.backgroundRounding);
     }
 
-    private drawAxis(p: p5) {
-        p.noStroke();
-        p.fill(this.style.axis);
-        p.rectMode(p.CORNERS);
-        
-
-        // horizontal
-        p.rect(
-            this.axisPadding,
-            p.height - this.axisPadding,
-            p.width - this.axisPadding,
-            p.height - this.axisPadding + this.axisSize * 0.5
-        );
-
-        // vertical
-        p.rect(
-            this.axisPadding,
-            p.height - this.axisPadding,
-            this.axisPadding + this.axisSize * 0.5,
-            this.axisPadding
-        );
-    }
-
-    private drawGraph(p: p5) {
-        // == Calculate Entry Poisitions == \\
-        let barSize = p.width * this.barSize;
-        const entryDistance = (p.width - this.axisPadding * 2) / this.data.values.length;
-        const edgeOffset = entryDistance / 2;
-        const barDistance: number = barSize * 1.5;
-        const barOffset: number = -barDistance * this.data.values[0].length * 0.5;
-
-        // == Calculate Value Space == \\
-        let minValue = Infinity;
-        let maxValue = 0;
-
-        for (let i = 0; i < this.data.values.length; i++) {
-            minValue = Math.min(minValue, ...this.data.values[i]);
-            maxValue = Math.max(maxValue, ...this.data.values[i]);
-        }
-        minValue = Math.min(0, minValue);
-        
-        // == Render Values == \\
-        if (this.rt == 'Block') {
-            for (let i = 0; i < this.data.values.length; i++) {
-                for (let j = 0; j < this.data.values[i].length; j++) {
-                    p.noStroke();
-                    p.rectMode(p.CORNER)
-                    p.fill(this.data.colors[j]);
-                    p.rect(
-                        this.axisPadding + edgeOffset + entryDistance * i + barOffset + barDistance * j,
-                        p.height - this.axisPadding,
-                        barSize,
-                        -1 * p.map(
-                            this.data.values[i][j],
-                            minValue,
-                            maxValue,
-                            0,
-                            p.height - this.axisPadding * 2
-                        ),
-                    );
-                }
+    private drawAxis() {
+        if (this.drawGrid) {
+            const lx = this.data.values.length;
+            for ( let x = 0; x < lx; x++) {
+                const xp = this.getXValuePosition(x, 0);
+                this.drawLineValueSpace(
+                    {x: xp, y: 0}, 
+                    {x: xp, y: 1}, 
+                    this.style.grid,
+                    this.getGridSize()
+                );
             }
-        }
 
-        else if (this.rt == 'Line') {
-            let previous: any = [];
-            let ms = Math.min(p.width, p.height);
-
-            for (let i = 0; i < this.data.values.length; i++) {
-                for (let j = 0; j < this.data.values[i].length; j++) {
-                    let x = edgeOffset + this.axisPadding + i * entryDistance;
-                    let y = p.height - this.axisPadding - p.map(
-                            this.data.values[i][j],
-                            minValue,
-                            maxValue,
-                            0,
-                            p.height - this.axisPadding * 2
-                        );
-
-                    p.stroke(this.data.colors[j]);
-
-                    if(i > 0) {
-                        p.strokeWeight(ms * 0.008);
-                        p.line(x, y, previous[(i - 1) * 3 + j].x, previous[(i - 1) * 3 + j].y);
-                    }
-
-                    p.rectMode(p.CORNER)
-                    p.strokeWeight(ms * 0.024);
-                    p.point(x, y);
-
-                    previous.push({
-                        x: x,
-                        y: y,
-                    })
-                }
+            const ly = this.data.valueCount;
+            for (let y = 0; y < ly; y++) {
+                const xy = this.getYValuePosition(y);
+                this.drawLineValueSpace(
+                    {x: 0, y: xy},
+                    {x: 1, y: xy},
+                    this.style.grid,
+                    this.getGridSize()
+                )
             }
+
         }
+
+        this.drawLineValueSpace({x: 0, y: 0}, {x: 1, y: 0}, this.style.axis, this.getAxisSize());
+        this.drawLineValueSpace({x: 0, y: 0}, {x: 0, y: 1}, this.style.axis, this.getAxisSize());
     }
 
     
 
+    // == SubSection: Shape Drawing == \\
+    private drawRectValueSpace(p1: Vec2D, p2: Vec2D, color: string, alpha: number = 255, rounding: number = 3) {
+        let c: p5.Color = this.p.color(color);
+        c.setAlpha(alpha);
+
+        this.p.noStroke();
+        this.p.fill(c);
+        
+        const sp1 = this.valueToScreenSpace(p1.x, p1.y);
+        const sp2 = this.valueToScreenSpace(p2.x, p2.y);
+
+        this.p.rectMode(this.p.CORNERS)
+        this.p.rect(sp1.x, sp1.y, sp2.x, sp2.y, rounding);
+    }
+
+    private drawLineValueSpace(p1: Vec2D, p2: Vec2D, color: string, size: number = 5, alpha: number = 255) {
+        let c: p5.Color = this.p.color(color);
+        c.setAlpha(alpha);
+
+        this.p.strokeWeight(size);
+        this.p.strokeCap(this.p.ROUND);
+        this.p.stroke(c);
+        
+        const sp1 = this.valueToScreenSpace(p1.x, p1.y);
+        const sp2 = this.valueToScreenSpace(p2.x, p2.y);
+
+        this.p.line(sp1.x, sp1.y, sp2.x, sp2.y);
+    }
+
+    private drawDottedLineValueSpace(p1: Vec2D, p2: Vec2D, color: string, size: number = 5, alpha: number = 255){
+        const lineLength = 30;
+
+        
+
+    }
+
+
+    // == Section: Coordinate Transformation Utilities == \\
+    private getXValuePosition(mainIndex: number, subIndex: number): number {
+        const n = this.data.values.length;
+        return (mainIndex + 1) / (n + 1);
+    }
+
+    private getYValuePosition(index: number): number {
+        const n = this.data.valueCount;
+        return (index + 1) / (n + 1);
+    }
+
+    /* Converts a Point from ValueSpaxce (0.0 - 1.0) to ScreenSpace (0..Dimensions)  */
+    private valueToScreenSpace(x: number, y: number): Vec2D {
+        const pd = this.getPadding();
+
+        return {
+            x: this.xToScreenSpace(x),
+            y: this.yToScreenSpace(y),
+        }
+    }
+
+    private xToScreenSpace(x: number): number {
+        const pd = this.getPadding();
+        return this.p.lerp(pd, this.p.width - pd, x);
+    }
+
+    private yToScreenSpace(y: number): number {
+        const pd = this.getPadding();
+        return this.p.lerp(this.p.height - pd, pd, y);
+    }
+
+    private getPadding() {
+        return Math.min(this.p.width, this.p.height) * Math.max(this.padding, 0.02);
+    }
+
+    private getWidthHeightRatio(): number {
+        return this.p.width / this.p.height;
+    }
+
+    private getHeightWidthRatio(): number {
+        return this.p.height / this.p.width;
+    }
+
+    private getGridSize(): number {
+        return Math.min(this.p.height, this.p.width) * this.gridSize;
+    }
+
+    private getAxisSize(): number {
+        return Math.min(this.p.height, this.p.width) * this.axisSize;
+    }
 }
 
 /* Graph Data look
