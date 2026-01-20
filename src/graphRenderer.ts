@@ -13,7 +13,7 @@ type Graph1D = {
     valueType: ValueType,
     values: Array<{
         name: string, 
-        v: Array<{ name: optString, value: number }>
+        valueParams: Array<{ name: optString, color: string, value: number }>
     }>,
 }
 
@@ -43,17 +43,17 @@ const mockData: GraphData = {
     visualType: 'Bar',
     graphType: {
         valueRange: {min: 0.0, max: 100.0,},    // min is valueNames[0] & max is valueNames[len-1]
-        valueNames: [' 0%', '25%', '50%', '75%', '100%'],
+        valueNames: [' 0 %', '25 %', '50 %', '75 %', '100 %'],
         valueType: 'Percentile',
         values: [
-            { name: 'Prog1', v: [ 
-                {name: 'Portfolio', value: 30.0},
-                {name: 'Quiz', value: 20.0},
-                {name: 'Test', value: 50.0},
+            { name: 'Prog1', valueParams: [ 
+                {name: 'Portfolio', color: '#3d5a80',value: 30.0},
+                {name: 'Quiz', color: '#98c1d9', value: 20.0},
+                {name: 'Test', color: '#e0fbfc', value: 50.0},
             ]},
-            { name: 'Prog2', v: [{ name: undefined, value: 87.0 }]},
-            { name: 'AlgoDat', v: [{ name: undefined, value: 87.0 }]},
-            { name: 'gdv', v: [{ name: undefined, value: 87.0 }]}, 
+            { name: 'Prog2', valueParams: [{ name: 'Prog2', color: '#3d5a80', value: 50.0 }]},
+            { name: 'AlgoDat', valueParams: [{ name: 'AlgoDat', color: '#3d5a80', value: 75.0 }]},
+            { name: 'GDV', valueParams: [{ name: 'GDV', color: '#3d5a80', value: 100.0 }]}, 
         ],
     }
 }
@@ -71,20 +71,25 @@ export class GraphRenderer {
 
     // === Section: Styling === \\
     private colors = {
-        background: '#FAF7F0',
-        axis: '#4A4947'
+        background: '#e7d7c1',
+        axis: '#293241'
     }
 
+    // Keep it absolute, if you want to make it relative, calulate new before rendering
     public axisStyling = {
-        padding: { left: 40, up: 40, down: 40, right: 40 },
+        padding: { left: 60, up: 60, down: 60, right: 60 },
+        maxValuePadding: 60, // !todo: find better name
         size: 2,
         rounding: 10,
-        testSize: 10,
+        textSize: 14,
+        textOffset: 5,
     }
 
-    public valueStyling = {
-
+    public barStyling = {
+        size: 20,
     }
+
+    
 
     // === Section: Constructors === \\
     public constructor(p: p5) {
@@ -94,8 +99,8 @@ export class GraphRenderer {
     // === Section: Rendering === \\
     public render() {
         this.drawBackground();
+        this.drawBarDiagram1D();
         this.drawAxis();
-        this.drawNames();
     }
 
     private drawBackground() {
@@ -125,14 +130,93 @@ export class GraphRenderer {
     }   
 
     private drawNames() {
-        // Case: Graph1D
-        if ('valueRange' in this.data.graphType) {
-            // Draw Y Axis first
-            for (let i = 0; i < this.data.graphType.valueDivision; i++) {
+        const gt = this.data.graphType;
 
-            }
+        // Check if graphType is 1D
+        if ('valueRange' in gt) {
+
+            // Text Styling
+            this.p.textSize(this.axisStyling.textSize);
+            this.p.textAlign(this.p.RIGHT, this.p.CENTER);
+
+            // Draw Y Axis first
+            gt.valueNames.forEach((n, i) => {
+                const pY = this.calculateValueSpaceY( i, 0, gt.valueNames.length - 1);
+                const pX = this.axisStyling.padding.left - this.axisStyling.textOffset;
+
+                this.p.text(n, pX, pY);
+            });
+
+            // Draw X Axis Next
+            this.p.textAlign(this.p.CENTER, this.p.TOP);
+            gt.values.forEach((v, i) => {
+                const pX = this.calculateValueSpaceX( i, -1, gt.values.length);
+                const pY = this.p.height - this.axisStyling.padding.down + this.axisStyling.textOffset;
+
+                this.p.text(v.name, pX, pY);
+            })
         }
     }
 
+    private drawBarDiagram1D() {
+        this.drawNames();
+        this.drawBars();
+    }
+
+    private drawBars() {
+        const gt = this.data.graphType;
     
+        if ('valueRange' in gt) 
+        { 
+            this.p.rectMode(this.p.CORNERS);
+
+            gt.values.forEach((v, i) => {
+                let preMin = gt.valueRange.min;
+                v.valueParams.forEach( (params) => {
+                    const pX = this.calculateValueSpaceX( i, -1, gt.values.length);
+                    const pY = this.calculateValueSpaceY( params.value + preMin, gt.valueRange.min, gt.valueRange.max);
+                    const deltaY = this.calculateValueSpaceY( preMin, gt.valueRange.min, gt.valueRange.max);
+
+                    this.p.fill(params.color);
+                    this.p.rect(pX - this.barStyling.size, deltaY, pX + this.barStyling.size, pY);
+                    preMin += params.value;
+                })
+            });
+        }
+    }
+
+    // === Section: Draw Info Box === \\
+    private checkMouseOver() {
+
+    }
+
+    private calculateBars() {
+    }
+
+    // === Section: Transformation Utilities === \\
+    private calculateValueSpaceY(value: number, min: number, max: number): number {
+        return this.p.map(
+            value,
+            min, max,
+            this.getValueSpaceBottom(),
+            this.axisStyling.padding.up + this.axisStyling.maxValuePadding,
+        );
+    }
+
+    private calculateValueSpaceX(value: number, min: number, max: number): number {
+        return this.p.map(
+            value,
+            min, max,
+            this.axisStyling.padding.left,
+            this.p.width - this.axisStyling.padding.right,
+        );
+    }
+
+    private getScreenSpaceValueSpace(): number {
+        return this.p.height - this.axisStyling.padding.down - (this.axisStyling.padding.up + this.axisStyling.maxValuePadding);
+    }
+
+    private getValueSpaceBottom(): number {
+        return this.p.height - this.axisStyling.padding.down;
+    }
 }
