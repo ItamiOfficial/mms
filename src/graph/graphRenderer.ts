@@ -38,7 +38,7 @@ type GraphData = {
     graphType: BarDiagram | LineGraph,
 }
 
-const mockData: GraphData = {
+export const mockData: GraphData = {
     sourceName: 'Module',
     valueName: 'Noten',
     graphType: {
@@ -49,28 +49,28 @@ const mockData: GraphData = {
         values: [
             {
                 name: 'Prog1', valueParams: [
-                    { name: 'Portfolio', color: '#660708', value: 30.0 },
-                    { name: 'Quiz', color: '#a4161a', value: 20.0 },
-                    { name: 'Test', color: '#e5383b', value: 50.0 },
+                    { name: 'Portfolio', color: '#344e41', value: 30.0 },
+                    { name: 'Quiz', color: '#3a5a40', value: 20.0 },
+                    { name: 'Test', color: '#588157', value: 50.0 },
                 ]
             },
             {
                 name: 'Audio Prog', valueParams: [
-                    { name: 'Portfolio', color: '#660708', value: 30.0 },
+                    { name: 'Portfolio', color: '#344e41', value: 30.0 },
                   
                 ]
             },
             {
                 name: 'MMS', valueParams: [
-                    { name: 'Presentation', color: '#660708', value: 30.0 },
-                    { name: 'Reflektion', color: '#a4161a', value: 20.0 },
-                    { name: 'Paper', color: '#660708', value: 40.0 },
-                    { name: 'Peer Review', color: '#e5383b', value: 10.0 },
+                    { name: 'Presentation', color: '#344e41', value: 30.0 },
+                    { name: 'Reflektion', color: '#3a5a40', value: 20.0 },
+                    { name: 'Paper', color: '#588157', value: 40.0 },
+                    { name: 'Peer Review', color: '#a3b18a', value: 10.0 },
                 ]
             },
-            { name: 'Prog2', valueParams: [{ name: 'Prog2', color: '#660708', value: 50.0 }] },
-            { name: 'AlgoDat', valueParams: [{ name: 'AlgoDat', color: '#660708', value: 75.0 }] },
-            { name: 'GDV', valueParams: [{ name: 'GDV', color: '#660708', value: 100.0 }] },
+            { name: 'Prog2', valueParams: [{ name: 'Prog2', color: '#344e41', value: 50.0 }] },
+            { name: 'AlgoDat', valueParams: [{ name: 'AlgoDat', color: '#344e41', value: 75.0 }] },
+            { name: 'GDV', valueParams: [{ name: 'GDV', color: '#344e41', value: 100.0 }] },
         ],
     }
 }
@@ -84,21 +84,23 @@ export class GraphRenderer {
     private p: p5;
 
     // === Section: Data Source === \\
-    private data: GraphData = mockData;
+    private data: GraphData;
 
     // === Section: Styling === \\
     private colors = {
-        background: '#161a1d',
-        axis: '#f5f3f4',
+        background: '#dad7cd',
+        axis: '#003049',
         grid: '#999094',
     }
 
+    
+
     // Keep it absolute, if you want to make it relative, calulate new before rendering
     public axisStyling = {
-        padding: { left: 80, up: 60, down: 60, right: 40 },
-        maxValuePadding: 40, // !todo: find better name
+        padding: { left: 80, up: 30, down: 40, right: 40 },
+        maxValuePadding: 20, // !todo: find better name
         size: 2,
-        rounding: 10,
+        axisRounding: 0,
         textSize: 18,
         textOffset: 10,
     }
@@ -107,11 +109,21 @@ export class GraphRenderer {
         size: 16,
     }
 
-
+    private currentBar: any | null = null;
 
     // === Section: Constructors === \\
-    public constructor(p: p5) {
+    public constructor(
+        p: p5, 
+        data: GraphData, 
+        colors: undefined | { background: string, axis: string, grid: string } = undefined,
+    ) 
+    {
         this.p = p;
+        this.data = data;
+
+        if (colors != undefined) {
+            this.colors = colors;
+        }
     }
 
     // === Section: Rendering === \\
@@ -134,7 +146,7 @@ export class GraphRenderer {
             this.axisStyling.padding.up,
             this.axisStyling.padding.left + this.axisStyling.size,
             this.p.height - this.axisStyling.padding.down,
-            this.axisStyling.rounding
+            this.axisStyling.axisRounding
         );
 
         this.p.rect(
@@ -142,7 +154,7 @@ export class GraphRenderer {
             this.p.height - this.axisStyling.padding.down,
             this.p.width - this.axisStyling.padding.right,
             this.p.height - this.axisStyling.padding.down - this.axisStyling.size,
-            this.axisStyling.rounding
+            this.axisStyling.axisRounding
         );
     }
 

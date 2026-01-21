@@ -1,8 +1,8 @@
 import p5 from 'p5';
-import { GraphRenderer } from './graphRenderer';
+import { GraphRenderer , mockData} from './graphRenderer';
 
 const sketch = (p: p5) => {
-    let g: GraphRenderer = new GraphRenderer(p);
+    let g: GraphRenderer = new GraphRenderer(p, mockData);
 
     p.setup = () => {
         const canvas = p.createCanvas(p.windowWidth, p.windowHeight);
