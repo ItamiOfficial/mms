@@ -132,6 +132,7 @@ export class GraphRenderer {
 
     // === Section: Rendering === \\
     public render() {
+        this.p.cursor(this.p.ARROW);
         this.drawBackground();
         this.drawBarDiagram();
     }
@@ -276,12 +277,23 @@ export class GraphRenderer {
     private drawSegmentData(params: any, sectionCoordinates: Box) {
         if (params.name != undefined) {
 
+            const x = sectionCoordinates.x1 - this.barStyling.size;
+            const y = this.p.mouseY;
+
+            this.p.noCursor();
+            this.p.fill(this.colors.background);
+            this.p.rectMode(this.p.CENTER);
+            this.p.strokeWeight(4);
+            this.p.stroke(0);
+            this.p.rect(x,y, this.infoBoxStyling.width, this.infoBoxStyling.height);
+
+            this.p.noStroke();
             this.p.fill(this.colors.axis);
-            this.p.textAlign(this.p.LEFT, this.p.CENTER);
+            this.p.textAlign(this.p.CENTER, this.p.CENTER);
             this.p.text(
                 params.name + '\n' + params.value, 
-                sectionCoordinates.x1 + this.axisStyling.textOffset, 
-                this.p.mouseY
+                x,
+                y
             );   
         }
     }
