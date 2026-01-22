@@ -18,5 +18,8 @@ export function boxToPointCollision(box: Box, point: Point): boolean {
     if (box.x0 > box.x1) { x0 = box.x1; x1 = box.x0; }
     if (box.y0 > box.y1) { y0 = box.y1; y1 = box.y0; }
 
+    // console.log(`x0: ${x0} < ${point.x} < x1: ${x1}`);
+    // console.log(`y0: ${y0} < ${point.y} < y1: ${y1}`);
+
     return point.x >= x0 && point.x <= x1 && point.y >= y0 && point.y <= y1;
 }

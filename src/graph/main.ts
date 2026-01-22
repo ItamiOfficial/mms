@@ -7,8 +7,7 @@ const sketch = (p: p5) => {
     p.setup = () => {
         const canvas = p.createCanvas(p.windowWidth, p.windowHeight);
         canvas.parent("#p5-container");
-        p.frameRate(120);   
-
+        p.frameRate(60);   
     };
 
     p.draw = () => {
@@ -18,8 +17,6 @@ const sketch = (p: p5) => {
     p.windowResized = () => {
         p.resizeCanvas(p.windowWidth, p.windowHeight);
     }
-
-
 };
 
 /* 

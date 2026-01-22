@@ -1,4 +1,5 @@
 import p5 from 'p5';
+import { boxToPointCollision, type Box } from './collision';
 
 /* --------------------------- */
 // === Section: Graph Data === \\
@@ -91,9 +92,8 @@ export class GraphRenderer {
         background: '#dad7cd',
         axis: '#003049',
         grid: '#999094',
+        infoBox: '#003049',
     }
-
-    
 
     // Keep it absolute, if you want to make it relative, calulate new before rendering
     public axisStyling = {
@@ -103,19 +103,23 @@ export class GraphRenderer {
         axisRounding: 0,
         textSize: 18,
         textOffset: 10,
+        useDottedGrid: true,
     }
 
     public barStyling = {
         size: 16,
     }
 
-    private currentBar: any | null = null;
+    public infoBoxStyling = {
+        width: 200,
+        height: 60,
+    }
 
     // === Section: Constructors === \\
     public constructor(
         p: p5, 
         data: GraphData, 
-        colors: undefined | { background: string, axis: string, grid: string } = undefined,
+        colors: undefined | { background: string, axis: string, grid: string, infoBox: string} = undefined,
     ) 
     {
         this.p = p;
@@ -129,11 +133,18 @@ export class GraphRenderer {
     // === Section: Rendering === \\
     public render() {
         this.drawBackground();
-        this.drawBarDiagram1D();
+        this.drawBarDiagram();
     }
 
     private drawBackground() {
         this.p.background(this.colors.background);
+    }
+
+    private drawBarDiagram() {
+        this.drawNames();
+        this.drawGrid()
+        this.drawBars();
+        this.drawAxis();
     }
 
     private drawAxis() {
@@ -189,27 +200,34 @@ export class GraphRenderer {
         }
     }
 
-    private drawBarDiagram1D() {
-        this.drawNames();
-        this.drawGrid()
-        this.drawBars();
-        this.drawAxis();
-    }
-
     private drawGrid() {
         const gt = this.data.graphType;
 
-        this.p.stroke(this.colors.grid);
-        this.p.strokeWeight(this.axisStyling.size / 2);
-
-
         if (gt.type == 'bar') {
-            for (let i = 1; i < gt.valueNames.length; i++) {
-                const pY = this.calculateValueSpaceY(i, 0, gt.valueNames.length - 1);
-                const pX0 = this.axisStyling.padding.left;
-                const pX1 = this.p.width - this.axisStyling.padding.right;
+            this.p.stroke(this.colors.grid);
+            this.p.strokeWeight(this.axisStyling.size / 2);
 
-                this.p.line(pX0, pY, pX1, pY);
+            if (this.axisStyling.useDottedGrid) {
+                const lineLength = 30;
+                const gapLength = 8;
+
+                for (let i = 1; i < gt.valueNames.length; i++) {
+                    const pY = this.calculateValueSpaceY(i, 0, gt.valueNames.length - 1);
+                    for (let x = this.axisStyling.padding.left + this.axisStyling.size / 2; x  + lineLength < this.p.width - this.axisStyling.padding.right; x += lineLength) {
+                        const mX = Math.min(x + lineLength - gapLength, this.p.width - this.axisStyling.padding.right);
+                        this.p.line(x, pY, mX, pY);
+                    }
+                }
+            } else {
+                for (let i = 1; i < gt.valueNames.length; i++) {
+                    const pY = this.calculateValueSpaceY(i, 0, gt.valueNames.length - 1);
+                    this.p.line(
+                        this.axisStyling.padding.left + this.axisStyling.size / 2,
+                        pY,
+                        this.p.width - this.axisStyling.padding.right,
+                        pY,
+                    );
+                }
             }
         }
     }
@@ -217,8 +235,10 @@ export class GraphRenderer {
     private drawBars() {
         const gt = this.data.graphType;
 
+        let infoBoxParams: any = undefined;
+        let infoBoxBox: Box = {x0: 0, y0: 0, x1: 0, y1: 0};
+
         if (gt.type == 'bar') {
-            this.p.rectMode(this.p.CORNERS);
             this.p.noStroke();
 
             gt.values.forEach((v, i) => {
@@ -228,22 +248,42 @@ export class GraphRenderer {
                     const pY = this.calculateValueSpaceY(params.value + preMin, gt.valueRange.min, gt.valueRange.max);
                     const deltaY = this.calculateValueSpaceY(preMin, gt.valueRange.min, gt.valueRange.max);
 
+                    const box: Box = {
+                        x0: pX - this.barStyling.size,
+                        y0: deltaY,
+                        x1: pX + this.barStyling.size,
+                        y1: pY,
+                    }
+
+                    this.p.rectMode(this.p.CORNERS);
                     this.p.fill(params.color);
-                    this.p.rect(pX - this.barStyling.size, deltaY, pX + this.barStyling.size, pY);
+                    this.p.rect(box.x0, box.y0, box.x1, box.y1);
                     preMin += params.value;
+
+                    if (boxToPointCollision(box, {x: this.p.mouseX, y: this.p.mouseY})) {
+                        infoBoxBox = box;
+                        infoBoxParams = params;
+                    } 
                 })
             });
+
+            if (infoBoxParams != undefined)
+                this.drawSegmentData(infoBoxParams, infoBoxBox);
         }
     }
 
-
     // === Section: Draw Info Box === \\
-    private checkMouseOver() {
+    private drawSegmentData(params: any, sectionCoordinates: Box) {
+        if (params.name != undefined) {
 
-    }
-
-    private calculateBars() {
-
+            this.p.fill(this.colors.axis);
+            this.p.textAlign(this.p.LEFT, this.p.CENTER);
+            this.p.text(
+                params.name + '\n' + params.value, 
+                sectionCoordinates.x1 + this.axisStyling.textOffset, 
+                this.p.mouseY
+            );   
+        }
     }
 
     // === Section: Transformation Utilities === \\
