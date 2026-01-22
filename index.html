@@ -1,20 +1,36 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <link rel="stylesheet" href="./style.css">   
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>mms</title>
-  </head>
-  <body>
-    <div class="dashboard">
-        <div id="chart-revenue" class="graph-box">
-            <script type="module" src="/src/graph/main.ts"></script>
-        </div>
-        <div id="chart-users" class="graph-box">
-            <script type="module" src="/src/graph/main.ts"></script>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multimedia Dashboard</title>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">MMS WiSe 2025</a>
+      <div class="d-flex">
+        <a href="#" class="btn btn-outline-primary me-2">Fragestellung</a>
+        <a href="#" class="btn btn-outline-primary me-2">Methodik</a>
+        <a href="#" class="btn btn-outline-primary me-2">Ergebnisse</a>
+        <a href="#" class="btn btn-outline-primary me-2">Resultat</a>
+      </div>
+    </div>
+  </nav>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>
+
+<!-- 
+    <div class="dashboard container">
+        <div class="row">
+            <div id="chart-revenue" class="graph-box"></div>
+            <div id="chart-users" class="graph-box"></div>
         </div>
      </div>
-  </body>
-</html>
+-->

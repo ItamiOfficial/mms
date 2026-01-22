@@ -46,15 +46,13 @@ export const createGraph = (containerSelector: string, data: GraphData) => {
         let g: GraphRenderer;
 
         p.setup = () => {
-            // Finde das Container-Element, um dessen Größe zu bestimmen
             const container = document.querySelector(containerSelector);
-            const w = container?.clientWidth || 400;
-            const h = container?.clientHeight || 400;
+            const w = container?.clientWidth || 300;
+            const h = container?.clientHeight || 300;
 
             const canvas = p.createCanvas(w, h);
             canvas.parent(container as HTMLElement);
             
-            // Initialisiere den Renderer mit den spezifischen Daten
             g = new GraphRenderer(p, data);
             p.frameRate(60);
         };

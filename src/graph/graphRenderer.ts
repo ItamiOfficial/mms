@@ -59,12 +59,14 @@ export class GraphRenderer {
     }
 
     // Keep it absolute, if you want to make it relative, calulate new before rendering
+    public backgroundRounding = 25;
+    
     public axisStyling = {
         padding: { left: 80, up: 30, down: 40, right: 40 },
         maxValuePadding: 20, // !todo: find better name
         size: 2,
         axisRounding: 0,
-        textSize: 18,
+        textSize: 13,
         textOffset: 10,
         useDottedGrid: true,
     }
@@ -74,9 +76,9 @@ export class GraphRenderer {
     }
 
     public infoBoxStyling = {
-        width: 130,
-        height: 40,
-        textSize: 14,
+        width: 110,
+        height: 30,
+        textSize: 13,
     }
 
     // === Section: Constructors === \\
@@ -102,7 +104,16 @@ export class GraphRenderer {
     }
 
     private drawBackground() {
-        this.p.background(this.colors.background);
+        this.p.background(0,0,0,0);
+        this.p.rectMode(this.p.CORNERS);
+        this.p.noStroke();
+        this.p.fill(this.colors.background);
+        this.p.rect(
+            0, 0,
+            this.p.width,
+            this.p.height,
+            this.backgroundRounding
+        );
     }
 
     private drawBarDiagram() {
