@@ -2,13 +2,11 @@ body {
     margin: 0;
 }
 
-#p5-container {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  pointer-events: auto;
+.graph-box {
+    width: 100%;       /* Oder z.B. 500px */
+    height: 400px;     /* WICHTIG: Eine feste Höhe angeben! */
+    background: #f0f0f0; /* Testweise, um zu sehen wo der Container ist */
+    margin-bottom: 20px;
 }
 
 canvas {

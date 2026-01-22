@@ -33,47 +33,10 @@ type LineGraph = {
     }>
 }
 
-type GraphData = {
+export type GraphData = {
     sourceName: string, // e.g. Country
     valueName: string,  // e.g. GDP
     graphType: BarDiagram | LineGraph,
-}
-
-export const mockData: GraphData = {
-    sourceName: 'Module',
-    valueName: 'Noten',
-    graphType: {
-        type: 'bar',
-        valueRange: { min: 0.0, max: 100.0, },    // min is valueNames[0] & max is valueNames[len-1]
-        valueNames: ['0 %', '12,5 %', '25.0 %', '37,5 %', '50.0 %', '62,5 %', '75.0 %', '87,5%', '100.0%'],
-        valueType: 'Percentile',
-        values: [
-            {
-                name: 'Prog1', valueParams: [
-                    { name: 'Portfolio', color: '#344e41', value: 30.0 },
-                    { name: 'Quiz', color: '#3a5a40', value: 20.0 },
-                    { name: 'Test', color: '#588157', value: 50.0 },
-                ]
-            },
-            {
-                name: 'Audio Prog', valueParams: [
-                    { name: 'Portfolio', color: '#344e41', value: 30.0 },
-                  
-                ]
-            },
-            {
-                name: 'MMS', valueParams: [
-                    { name: 'Presentation', color: '#344e41', value: 30.0 },
-                    { name: 'Reflektion', color: '#3a5a40', value: 20.0 },
-                    { name: 'Paper', color: '#588157', value: 40.0 },
-                    { name: 'Peer Review', color: '#a3b18a', value: 10.0 },
-                ]
-            },
-            { name: 'Prog2', valueParams: [{ name: 'Prog2', color: '#344e41', value: 50.0 }] },
-            { name: 'AlgoDat', valueParams: [{ name: 'AlgoDat', color: '#344e41', value: 75.0 }] },
-            { name: 'GDV', valueParams: [{ name: 'GDV', color: '#344e41', value: 100.0 }] },
-        ],
-    }
 }
 
 /* ------------------------------- */
@@ -111,8 +74,9 @@ export class GraphRenderer {
     }
 
     public infoBoxStyling = {
-        width: 200,
-        height: 60,
+        width: 130,
+        height: 40,
+        textSize: 14,
     }
 
     // === Section: Constructors === \\
@@ -269,29 +233,30 @@ export class GraphRenderer {
             });
 
             if (infoBoxParams != undefined)
-                this.drawSegmentData(infoBoxParams, infoBoxBox);
+                this.drawInfoBox(infoBoxParams, infoBoxBox);
         }
     }
 
     // === Section: Draw Info Box === \\
-    private drawSegmentData(params: any, sectionCoordinates: Box) {
+    private drawInfoBox(params: any, sectionCoordinates: Box) {
         if (params.name != undefined) {
 
-            const x = sectionCoordinates.x1 - this.barStyling.size;
+            const x = sectionCoordinates.x1 - this.barStyling.size; //!todo Update Clamping for ValueRane
             const y = this.p.mouseY;
 
             this.p.noCursor();
             this.p.fill(this.colors.background);
             this.p.rectMode(this.p.CENTER);
-            this.p.strokeWeight(4);
+            this.p.strokeWeight(2);
             this.p.stroke(0);
             this.p.rect(x,y, this.infoBoxStyling.width, this.infoBoxStyling.height);
 
             this.p.noStroke();
             this.p.fill(this.colors.axis);
             this.p.textAlign(this.p.CENTER, this.p.CENTER);
+            this.p.textSize(this.infoBoxStyling.textSize);
             this.p.text(
-                params.name + '\n' + params.value, 
+                params.name +': ' + params.value, 
                 x,
                 y
             );   
