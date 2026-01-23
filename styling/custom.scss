@@ -1,15 +1,16 @@
 // Declare own Colors
-$primary: #d1d1d1; 
-$secondary: #989898;
-$body-bg: #181919;
-$border-radius: 0.75rem;
+// $primary: #d1d1d1; 
+// $secondary: #3b3a36;
+$body-bg: #13171b;
+// $border-radius: 0.75rem;
 
 // Import Bootstrap
 @import "../node_modules/bootstrap/scss/bootstrap";
 
-// Create normal css
+// Create normal css#
+
 .body {
-    background-color: $body-bg;
+    background-color: $body-bg !important;
     padding: 0;
     margin: 0;
 }
@@ -20,3 +21,22 @@ $border-radius: 0.75rem;
     min-width: 300px;
 }
 
+// Content Stylings
+#content {
+    padding: 5rem;
+}
+
+// == Section: Fragestellung == \\
+.lead {
+    ol {
+        display: inline-block;       
+        text-align: left;            
+        list-style-position: inside; 
+        padding: 0;
+        
+        li {
+            margin-bottom: 1rem;
+            padding-left: 0.5rem; 
+        }
+    }
+}

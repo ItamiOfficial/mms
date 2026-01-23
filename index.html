@@ -2,26 +2,70 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Multimedia Dashboard</title>
+	<meta charset="UTF-8" />
+	<link rel="icon" type="image/svg+xml" href="/vite.svg" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>MMS WiSe 2025</title>
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">MMS WiSe 2025</a>
-      <div class="d-flex">
-        <a href="#" class="btn btn-outline-primary me-2">Fragestellung</a>
-        <a href="#" class="btn btn-outline-primary me-2">Methodik</a>
-        <a href="#" class="btn btn-outline-primary me-2">Ergebnisse</a>
-        <a href="#" class="btn btn-outline-primary me-2">Resultat</a>
-      </div>
-    </div>
-  </nav>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="#">MMS WiSe 2025</a>
+			<div class="d-flex" id="nav-container">
+				<a href="#" class="btn btn-outline-primary me-2 section-toggle"
+					data-target="section-fragestellung">Fragestellung</a>
+				<a href="#" class="btn btn-outline-primary me-2 section-toggle"
+					data-target="section-methodik">Methodik</a>
+				<a href="#" class="btn btn-outline-primary me-2 section-toggle"
+					data-target="section-ergebnisse">Ergebnisse</a>
+				<a href="#" class="btn btn-outline-primary me-2 section-toggle"
+					data-target="section-resultat">Resultat</a>
+			</div>
+		</div>
+	</nav>
 
-  <script type="module" src="/src/main.ts"></script>
+	<div id="content">
+		<div id="section-fragestellung" class="content-section">
+			<main class="px-3 text-center text-light">
+				<h1> Welche Auswirkungen haben KI und 
+					Bots für die Nutzbarkeit des Internets 
+					für die Studierendenan der Hochschule Fulda? 
+				</h1>
+				<div class="lead">
+    				<ol class="text-secondary">
+						<li>Welchen Nutzen ziehen die Studierenden 
+							der Hochschule Fulda aus Chat-Bots in ihrem
+							Hochschulalltag?
+						</li>
+						<li> 
+							Wie ist die Erkennbarkeit von KI und die Verlässligkeit 
+							auf KI, von den Studierenden der
+							Hochschule Fulda einzuschätzen?
+						</li>
+					</ol>
+				</div>
+			</main>
+		</div>
+
+		<div id="section-methodik" class="content-section" style="display:none;">Methodik Inhalt...</div>
+		<div id="section-ergebnisse" class="content-section" style="display:none;">Ergebnisse Inhalt...</div>
+		<div id="section-resultat" class="content-section" style="display:none;">Resultat Inhalt...</div>
+	</div>
+
+
+	<footer class="footer fixed-bottom mt-auto bg-dark py-3">
+		<div class="container">
+			<span class="text-body-secondary">
+				
+			</span>
+		</div>
+	</footer>
+
+
+
+
+	<script type="module" src="/src/main.ts"></script>
 </body>
 
 </html>
