@@ -9,28 +9,36 @@
 </head>
 
 <body>
-	<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-		<div class="container-fluid">
-			<a class="navbar-brand" href="#">MMS WiSe 2025</a>
-			<div class="d-flex" id="nav-container">
-				<a href="#" class="btn btn-outline-primary me-2 section-toggle"
-					data-target="section-fragestellung">Fragestellung</a>
-				<a href="#" class="btn btn-outline-primary me-2 section-toggle"
-					data-target="section-methodik">Methodik</a>
-				<a href="#" class="btn btn-outline-primary me-2 section-toggle"
-					data-target="section-ergebnisse">Ergebnisse</a>
-				<a href="#" class="btn btn-outline-primary me-2 section-toggle"
-					data-target="section-resultat">Resultat</a>
+	<nav class="navbar navbar-expand-lg  mb-4 sticky-top">
+			
+			<div class="d-flex align-items-center mx-auto">
+				<button id="prev-btn" class="btn btn-link text-primary p-0 me-3">
+					<i class="bi bi-arrow-left-circle-fill fs-3"></i>
+				</button>
+
+				<div id="nav-container" class="d-flex">
+					<a href="#" class="btn btn-outline-primary btn-sm me-2 section-toggle" data-target="section-fragestellung">Fragestellung</a>
+					<a href="#" class="btn btn-outline-primary btn-sm me-2 section-toggle" data-target="section-methodik">Methodik</a>
+					<a href="#" class="btn btn-outline-primary btn-sm me-2 section-toggle" data-target="section-ergebnisse">Ergebnisse</a>
+					<a href="#" class="btn btn-outline-primary btn-sm section-toggle" data-target="section-resultat">Resultat</a>
+				</div>
+
+				<button id="next-btn" class="btn btn-link text-primary p-0 ms-3">
+					<i class="bi bi-arrow-right-circle-fill fs-3"></i>
+				</button>
 			</div>
+
+
 		</div>
 	</nav>
 
 	<div id="content">
+		<!-- Section: Fragestellung-->
 		<div id="section-fragestellung" class="content-section">
-			<main class="px-3 text-center text-light">
+			<main>
 				<h1> Welche Auswirkungen haben KI und 
 					Bots für die Nutzbarkeit des Internets 
-					für die Studierendenan der Hochschule Fulda? 
+					für die Studierenden der Hochschule Fulda? 
 				</h1>
 				<div class="lead">
     				<ol class="text-secondary">
@@ -48,22 +56,45 @@
 			</main>
 		</div>
 
-		<div id="section-methodik" class="content-section" style="display:none;">Methodik Inhalt...</div>
+		<!-- Section: Methodik-->
+		<div id="section-methodik" class="content-section" style="display:none;">
+			<main>
+				<h1>
+					Methodik
+				</h1>
+				<p>
+					Wir stützen uns auf die inhaltliche Analyse von bereits existierenden Studien. 
+					Hierfür haben wir zum Thema passende Arbeiten ausgewählt und durchgearbeitet. 
+					Im Anschluss führen wir eine Befragung mittels Online-Survey durch, um quantitative Daten zu erhalten. 
+				</p>
+				<p>
+					Da die Zielgruppe unserer Studie die Studierenden der Hochschule Fulda sind, werden eben nur diese befragt. 
+					Die Teilnehmer:innen geben ihr Alter, Geschlecht, ihren Fachbereich und ihr Fachsemester an; die Erhebung erfolgt anonym. 
+					Der Fragebogen behandelt das Empfinden verschiedener Emotionen der Teilnehmer:innen im Netz und wie sich dieses seit der 
+					breiten Verfügbarkeit von KI-Tools verändert hat.
+				</p>
+				<p>
+					Aufgrund der Distributionslogistik ist es nicht ausgeschlossen, dass Teilnehmer:innen mehrmals den Fragebogen einreichen. 
+				</p>
+			</main>
+		</div>
+
+		<!-- Section: Ergebnisse-->
 		<div id="section-ergebnisse" class="content-section" style="display:none;">Ergebnisse Inhalt...</div>
+
+		<!-- Section: Resultat-->
 		<div id="section-resultat" class="content-section" style="display:none;">Resultat Inhalt...</div>
 	</div>
 
 
-	<footer class="footer fixed-bottom mt-auto bg-dark py-3">
-		<div class="container">
-			<span class="text-body-secondary">
-				
-			</span>
+	<footer class="footer fixed-bottom mt-auto py-3">
+		<div class="">
+			<div class="d-flex justify-content-evenly align-items-baseline text-secondary">
+				<div><a class="text-reset" href="https://forms.gle/dPxbQRtEkoaMBhRC7"> Formular (Kopie)</a></div>
+				<div><a class="text-reset" href="https://docs.google.com/spreadsheets/d/1DTj0n54bbfVBOPzegcfuzZNaOBP8rov7QO9IBUpdaLY/edit?usp=sharing"> Datenblatt </a></div>
+			</div>
 		</div>
 	</footer>
-
-
-
 
 	<script type="module" src="/src/main.ts"></script>
 </body>
