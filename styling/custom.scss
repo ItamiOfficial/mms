@@ -160,14 +160,29 @@ p {
 }
 
 .lead {
+    display: flex;
+    justify-content: center; // Zentriert die Liste horizontal im Container
+    width: 100%;
+
+
     ol {
         display: inline-block;
-        text-align: left; // Die Liste in sich linksbündig, damit Zahlen untereinander stehen
-        
+        text-align: left; // Die Zahlen bleiben schön untereinander
+        padding-left: 1.5rem; // Platz für die Listenzahlen
+        max-width: 80%; // Verhindert, dass der Text bei langen Fragen zu breit wird
+
         li {
             color: $secondary;
-            margin-bottom: 1.5rem;
-            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.4rem; // Etwas größer für bessere Lesbarkeit
+            line-height: 1.5;
+            
+            // Damit der Text innerhalb des List-Items auch zentriert wirkt, 
+            // falls er mehrzeilig ist:
+            &::marker {
+                font-weight: bold;
+                color: $primary;
+            }
         }
     }
 }
