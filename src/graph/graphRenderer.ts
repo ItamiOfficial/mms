@@ -5,7 +5,7 @@ import { boxToPointCollision, type Box } from './collision';
 // === Section: Graph Data === \\
 /* --------------------------- */
 
-type ValueType = 'Percentile' | 'Numerical';
+export type ValueType = 'Percentile' | 'Numerical';
 type optString = string | undefined;
 
 type BarDiagram = {
@@ -66,7 +66,7 @@ export class GraphRenderer {
         maxValuePadding: 20, // !todo: find better name
         size: 2,
         axisRounding: 0,
-        textSize: 13,
+        textSize: 16,
         textOffset: 10,
         useDottedGrid: true,
     }
@@ -76,7 +76,7 @@ export class GraphRenderer {
     }
 
     public infoBoxStyling = {
-        width: 110,
+        width: 200,
         height: 30,
         textSize: 13,
     }
@@ -255,17 +255,18 @@ export class GraphRenderer {
             const x = sectionCoordinates.x1 - this.barStyling.size; //!todo Update Clamping for ValueRane
             const y = this.p.mouseY;
 
+            this.p.textSize(this.infoBoxStyling.textSize);
+
             this.p.noCursor();
             this.p.fill(this.colors.background);
             this.p.rectMode(this.p.CENTER);
             this.p.strokeWeight(2);
             this.p.stroke(0);
-            this.p.rect(x,y, this.infoBoxStyling.width, this.infoBoxStyling.height);
+            this.p.rect(x,y, this.p.textWidth(params.name +': ' + params.value) + 10, this.infoBoxStyling.height);
 
             this.p.noStroke();
             this.p.fill(this.colors.axis);
             this.p.textAlign(this.p.CENTER, this.p.CENTER);
-            this.p.textSize(this.infoBoxStyling.textSize);
             this.p.text(
                 params.name +': ' + params.value, 
                 x,

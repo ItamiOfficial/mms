@@ -1,8 +1,16 @@
-import { createGraph, mockData } from "./graph/graph";
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import '../styling/custom.scss';
+import p5 from 'p5';
+import { createGraph, filters} from "./graph/graph";
+import { parseCSV } from './graph/csv_utils';
+import type { GraphData } from './graph/graphRenderer';
+
+let csvData;
+let graphData: GraphData;
 
 let lastIndex = 0;
+let graphInstance: p5 | null = null;
+
 
 const initNavigation = () => {
     const toggleButtons = Array.from(document.querySelectorAll<HTMLAnchorElement>('.section-toggle'));
@@ -22,8 +30,20 @@ const initNavigation = () => {
             const directionClass = newIndex >= lastIndex ? 'slide-in-right' : 'slide-in-left';
 
             target.style.display = 'block';
-            // Wir nutzen einen winzigen Timeout (10ms), damit der Browser 
-            // merkt, dass das Element jetzt da ist und die Animation startet.
+
+            if (targetId === 'section-ergebnisse') {
+                if (!graphInstance) {
+                    graphInstance = createGraph('#graph-wrapper', graphData);
+                } else {
+                    setTimeout(() => {
+                        const container = document.querySelector('#graph-wrapper');
+                        if (container && graphInstance) {
+                            graphInstance.resizeCanvas(container.clientWidth, container.clientHeight);
+                        }
+                    }, 50);
+                }
+            }
+
             setTimeout(() => {
                 target.classList.add(directionClass);
             }, 10);
@@ -88,6 +108,22 @@ const initNavigation = () => {
     }
 };
 
+async function loadCSV(){
+    const res = await fetch('../data/umfrage_data.csv');
+    const csv = await res.text();
+    
+    csvData = parseCSV(csv);
+    console.log(csvData);
+
+    graphData = filters.countBy(csvData.headers[1], csvData.headers[19], csvData);
+
+    return csvData;
+}
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
     initNavigation();
+    loadCSV();
+
 });
