@@ -1,8 +1,8 @@
 // Declare own Colors
-// $primary: #d1d1d1; 
-$secondary: #81817a;
+$secondary: #cbc9ab;
 $primary: #ebe8e8;
 $body-bg: #1b1a1a;
+$text-default: #bab7b2;
 $footer-header-bg: #252423;
 // $border-radius: 0.75rem;
 
@@ -13,12 +13,15 @@ $footer-header-bg: #252423;
 // Create normal css#
 html, body {
     height: 100%;
-    overflow: hidden; 
+    margin: 0;
+    color: $text-default;
+    background-color: $body-bg;
+    // Wir entfernen overflow: hidden, damit die Seite bei Bedarf scrollen kann
 }
 
 body {
     display: flex;
-    flex-direction: column;
+    flex-direction: column; // Navbar oben, Content mitte, Footer unten
 }
 
 p, ol li {
@@ -27,21 +30,80 @@ p, ol li {
 }
 
 main {
-    max-width: 900px; 
+    width: 100%;
+    max-width: 1100px; // Erhöht für Sidebar + Graph
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    flex: 1; // Wichtig für die vertikale Streckung
 }
 
 footer {
+    flex-shrink: 0; // Footer darf nicht zusammengedrückt werden
     background-color: $footer-header-bg;
     height: 60px;
-    z-index: 1030;
+    border-top: 1px solid rgba($primary, 0.1);
 }
 
 
-#graph-wrapper {
+.stats-container {
     display: flex;
-    max-height: 40vh;
-    height: 40vh;
+    gap: 20px;
+    flex: 1; // Füllt den vertikalen Raum im Main aus
+    min-height: 0; // CSS-Trick: Erlaubt dem Container, kleiner als sein Inhalt zu werden
+    margin-bottom: 20px;
+
+    label {
+            color: $secondary; 
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .form-select {
+            background-color: #2b2a2a; 
+            border-color: rgba($primary, 0.2);
+            color: $text-default; 
+            cursor: pointer;
+
+            // Das kleine Pfeil-Icon von Bootstrap weiß färben
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ebe8e8' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+
+            &:focus {
+                border-color: $secondary;
+                box-shadow: 0 0 0 0.25rem rgba($secondary, 0.25);
+                background-color: #333;
+                color: $text-default;
+            }
+            
+            // Die Optionen im Dropdown (wichtig für Chrome/Windows)
+            option {
+                background-color: #2b2a2a;
+                color: $text-default;
+            }
+        }
+    
+    .graph-sidebar {
+        width: 250px; // Etwas breiter für Lesbarkeit
+        flex-shrink: 0;
+        background: $footer-header-bg;
+        padding: 20px;
+        border-radius: 12px;
+        height: fit-content; // Sidebar passt sich dem Inhalt an    
+        
+        .control-group {
+            margin-bottom: 20px;
+            label { display: block; margin-bottom: 8px; font-weight: bold; }
+        }
+    }
+
+    #graph-wrapper {
+        flex: 1;
+        background: rgba(0,0,0,0.1);
+        border-radius: 12px;
+        min-height: 300px; // Kleinerer Mindestwert für kleine Bildschirme
+        position: relative; // Wichtig für p5.js Messung
+        overflow: hidden;
+    }
 }
 
 // Content Stylings
@@ -49,6 +111,12 @@ h1 {
     text-align: center;
     color: $primary;
     padding-bottom: 40px;
+}
+
+#graph-description {
+    text-align: center;
+    color: $secondary;
+    padding-bottom: 10px;
 }
 
 
@@ -60,10 +128,10 @@ p {
 }
 
 #content {
-    height: calc(100vh - 70px); 
-    overflow-y: auto;
+    flex: 1 0 auto; // Nimmt den gesamten verfügbaren Platz ein
     padding: 1rem 2rem;
-    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .content-section {

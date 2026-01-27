@@ -1,15 +1,65 @@
-import 'bootstrap-icons/font/bootstrap-icons.css'
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import '../styling/custom.scss';
 import p5 from 'p5';
-import { createGraph, filters} from "./graph/graph";
-import { parseCSV } from './graph/csv_utils';
+import { createGraph, filters } from "./graph/graph";
+import { parseCSV, type Table } from './graph/csv_utils';
 import type { GraphData } from './graph/graphRenderer';
 
-let csvData;
-let graphData: GraphData;
+const state = {
+    csvData: null as Table | null,
+    graphData: null as GraphData | null,
+    graphInstance: null as p5 | null,
+    lastIndex: 0
+};
 
-let lastIndex = 0;
-let graphInstance: p5 | null = null;
+
+async function loadData() {
+    try {
+        const res = await fetch('../data/umfrage_data.csv');
+        const csvText = await res.text();
+        state.csvData = parseCSV(csvText);
+
+        if (!state.csvData) throw new Error("CSV konnte nicht geparst werden");
+
+        // Initiale Filterung (Beispiel: Header 1 und 19)
+        const category = state.csvData.headers[1];
+        const filterBy = state.csvData.headers[19];
+        
+        state.graphData = filters.countBy(category, filterBy, state.csvData);
+
+        // UI Text setzen
+        const subTitle = document.getElementById('graph-description');
+        if (subTitle) {
+            subTitle.innerText = `"${category}" --- "${filterBy}"`;
+        }
+
+        return true;
+    } catch (error) {
+        console.error("Datenladefehler:", error);
+        return false;
+    }
+}
+
+
+const handleGraphRendering = (targetId: string) => {
+    if (targetId !== 'section-ergebnisse' || !state.graphData) return;
+
+    const container = document.getElementById('graph-wrapper');
+    if (!container) return;
+
+    if (!state.graphInstance) {
+        state.graphInstance = createGraph('#graph-wrapper', state.graphData);
+    } else {
+        // Kurzer Delay, damit der Browser das Flex-Layout fertig berechnen kann
+        setTimeout(() => {
+            const w = container.clientWidth;
+            const h = container.clientHeight;
+            if (w > 0 && h > 0) {
+                state.graphInstance?.resizeCanvas(w, h);
+            }
+        }, 100);
+    }
+};
 
 
 const initNavigation = () => {
@@ -17,8 +67,19 @@ const initNavigation = () => {
     const sections = document.querySelectorAll<HTMLElement>('.content-section');
     const prevBtn = document.getElementById('prev-btn') as HTMLButtonElement;
     const nextBtn = document.getElementById('next-btn') as HTMLButtonElement;
+    const content = document.getElementById('content');
 
-    // Eine Hilfsfunktion für den sauberen Wechsel
+    const updateArrowVisibility = (currentIndex: number) => {
+        if (prevBtn) {
+            prevBtn.disabled = currentIndex === 0;
+            prevBtn.style.opacity = prevBtn.disabled ? '0.2' : '1';
+        }
+        if (nextBtn) {
+            nextBtn.disabled = currentIndex === toggleButtons.length - 1;
+            nextBtn.style.opacity = nextBtn.disabled ? '0.2' : '1';
+        }
+    };
+
     const switchSection = (targetId: string, newIndex: number) => {
         sections.forEach(s => {
             s.classList.remove('slide-in-right', 'slide-in-left');
@@ -26,47 +87,18 @@ const initNavigation = () => {
         });
 
         const target = document.getElementById(targetId);
-        if (target) {
-            const directionClass = newIndex >= lastIndex ? 'slide-in-right' : 'slide-in-left';
+        if (!target) return;
 
-            target.style.display = 'block';
+        const directionClass = newIndex >= state.lastIndex ? 'slide-in-right' : 'slide-in-left';
+        target.style.display = 'block';
 
-            if (targetId === 'section-ergebnisse') {
-                if (!graphInstance) {
-                    graphInstance = createGraph('#graph-wrapper', graphData);
-                } else {
-                    setTimeout(() => {
-                        const container = document.querySelector('#graph-wrapper');
-                        if (container && graphInstance) {
-                            graphInstance.resizeCanvas(container.clientWidth, container.clientHeight);
-                        }
-                    }, 50);
-                }
-            }
+        // Graphen-Logik triggern
+        handleGraphRendering(targetId);
 
-            setTimeout(() => {
-                target.classList.add(directionClass);
-            }, 10);
-
-            lastIndex = newIndex
-        }
+        setTimeout(() => target.classList.add(directionClass), 10);
+        state.lastIndex = newIndex;
+        updateArrowVisibility(newIndex);
     };
-
-    toggleButtons.forEach((button, index) => {
-        button.addEventListener('click', (e: MouseEvent) => {
-            e.preventDefault();
-            const targetId = button.getAttribute('data-target');
-            if (!targetId) return;
-
-            // Nutze die neue Animations-Funktion
-            switchSection(targetId, index);
-
-            toggleButtons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-
-            updateArrowVisibility();
-        });
-    });
 
     const navigate = (direction: number) => {
         const currentIndex = toggleButtons.findIndex(btn => btn.classList.contains('active'));
@@ -74,56 +106,92 @@ const initNavigation = () => {
 
         if (newIndex >= 0 && newIndex < toggleButtons.length) {
             toggleButtons[newIndex].click();
-            
-            // WICHTIG: Wenn du Scrollen innerhalb von #content hast:
-            const content = document.getElementById('content');
             content?.scrollTo({ top: 0, behavior: 'smooth' });
         }
     };
 
-    // ... Rest deiner updateArrowVisibility, prevBtn, nextBtn und keydown bleibt gleich ...
-    
-    const updateArrowVisibility = () => {
-        const currentIndex = toggleButtons.findIndex(btn => btn.classList.contains('active'));
-        if (prevBtn) {
-            prevBtn.disabled = currentIndex === 0;
-            prevBtn.style.opacity = currentIndex === 0 ? '0.2' : '1';
-        }
-        if (nextBtn) {
-            nextBtn.disabled = currentIndex === toggleButtons.length - 1;
-            nextBtn.style.opacity = currentIndex === toggleButtons.length - 1 ? '0.2' : '1';
-        }
-    };
+    // Event Listener
+    toggleButtons.forEach((button, index) => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = button.getAttribute('data-target');
+            if (!targetId) return;
+
+            toggleButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            switchSection(targetId, index);
+        });
+    });
 
     prevBtn?.addEventListener('click', () => navigate(-1));
     nextBtn?.addEventListener('click', () => navigate(1));
 
-    document.addEventListener('keydown', (e: KeyboardEvent) => {
+    document.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowLeft') navigate(-1);
         if (e.key === 'ArrowRight') navigate(1);
     });
 
-    if (toggleButtons.length > 0) {
-        toggleButtons[0].click();
-    }
+    // Start-Sektion aktivieren
+    if (toggleButtons.length > 0) toggleButtons[0].click();
 };
 
-async function loadCSV(){
-    const res = await fetch('../data/umfrage_data.csv');
-    const csv = await res.text();
-    
-    csvData = parseCSV(csv);
-    console.log(csvData);
+const setupSidebar = () => {
+    const selectCat = document.getElementById('select-category') as HTMLSelectElement;
+    const selectFilter = document.getElementById('select-filter') as HTMLSelectElement;
 
-    graphData = filters.countBy(csvData.headers[1], csvData.headers[19], csvData);
+    if (!state.csvData || !selectCat || !selectFilter) return;
 
-    return csvData;
-}
+    // Dropdowns leeren und mit CSV-Headern füllen
+    selectCat.innerHTML = '';
+    selectFilter.innerHTML = '';
 
+    state.csvData.headers.forEach((header, index) => {
+        const opt = new Option(header, index.toString());
+        selectCat.add(opt.cloneNode(true) as HTMLOptionElement);
+        selectFilter.add(opt);
+    });
 
+    // Start-Werte setzen (z.B. Spalte 1 und 19)
+    selectCat.value = "1";
+    selectFilter.value = "19";
 
-document.addEventListener('DOMContentLoaded', () => {
-    initNavigation();
-    loadCSV();
+    const updateHandler = () => {
+        const catName = state.csvData!.headers[parseInt(selectCat.value)];
+        const filterName = state.csvData!.headers[parseInt(selectFilter.value)];
+        
+        // Daten neu filtern
+        state.graphData = filters.countBy(catName, filterName, state.csvData!);
 
+        // Graph neu zeichnen
+        if (state.graphInstance) {
+            state.graphInstance.remove(); // Alten Sketch sauber beenden
+            state.graphInstance = createGraph('#graph-wrapper', state.graphData!);
+        }
+
+        // Beschreibung updaten
+        const subTitle = document.getElementById('graph-description');
+        if (subTitle) {
+            if (catName === filterName) {
+                subTitle.innerText = `"${catName}"`;
+            } else {
+                subTitle.innerText = `"${catName}" --- "${filterName}"`;
+            }
+        }
+    };
+
+    selectCat.addEventListener('change', updateHandler);
+    selectFilter.addEventListener('change', updateHandler);
+};
+
+// Initialisierung beim Laden der Seite
+document.addEventListener('DOMContentLoaded', async () => {
+    const success = await loadData();
+    if (success) {
+        setupSidebar();
+        initNavigation();
+    } else {
+        const wrapper = document.getElementById('graph-wrapper');
+        if (wrapper) wrapper.innerText = "Daten konnten nicht geladen werden.";
+    }
 });

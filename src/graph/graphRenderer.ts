@@ -66,7 +66,7 @@ export class GraphRenderer {
         maxValuePadding: 20, // !todo: find better name
         size: 2,
         axisRounding: 0,
-        textSize: 16,
+        textSize: 15,
         textOffset: 10,
         useDottedGrid: true,
     }

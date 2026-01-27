@@ -82,9 +82,30 @@
 		<!-- Section: Ergebnisse-->
 		<div id="section-ergebnisse" class="content-section" style="display:none;">
 			<main>
-				<h1>Ergebnisse</h1>
-				<div id="graph-wrapper">
+				<h1>Ergebnisse</h1>	
+				<h5 id="graph-description">Hallo</h5>
 
+				<div class="stats-container">
+					<aside class="graph-sidebar">
+						<div class="control-group">
+							<label for="select-category">Hauptmetrik </label>
+							<select id="select-category" class="form-select"></select>
+						</div>
+						
+						<div class="control-group">
+							<label for="select-filter">Gruppieren (Stack)</label>
+							<select id="select-filter" class="form-select"></select>
+						</div>
+
+						<hr>
+						
+						<div class="info-box">
+							<small id="graph-info">Wähle Spalten aus, um die Korrelation zu analysieren.</small>
+						</div>
+					</aside>
+
+					<main id="graph-wrapper">
+						</main>
 				</div>
 			</main>
 		</div>
@@ -98,7 +119,7 @@
 	</div>
 
 
-	<footer class="footer fixed-bottom mt-auto py-3">
+	<footer class="footer py-3">
 		<div class="">
 			<div class="d-flex justify-content-evenly align-items-baseline text-secondary">
 				<div><a class="text-reset" href="https://forms.gle/dPxbQRtEkoaMBhRC7"> Formular (Kopie)</a></div>
