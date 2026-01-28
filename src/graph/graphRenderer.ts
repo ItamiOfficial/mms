@@ -87,7 +87,6 @@ export class GraphRenderer {
 
     public updateData(newData: GraphData) {
         this.data = newData;
-        //this.syncAnimatedValues();
     }
 
     // === Section: Constructors === \\

@@ -1,11 +1,10 @@
-// Declare own Colors
 $secondary: #cbc9ab;
 $primary: #ebe8e8;
 $body-bg: #1b1a1a;
 $text-default: #bab7b2;
 $footer-header-bg: #1b1a1a;
-$glow-color: #171e2a; // Die Farbe für das Zentrum
-// $border-radius: 0.75rem;
+$glow-color: #171e2a;
+$footer-header-size: 70px;
 
 // Import Bootstrap
 @import "../node_modules/bootstrap/scss/bootstrap";
@@ -18,12 +17,11 @@ html, body {
     color: $text-default;
     background: radial-gradient(circle at center, $glow-color 0%, $body-bg 100%);
     background-attachment: fixed;
-    // Wir entfernen overflow: hidden, damit die Seite bei Bedarf scrollen kann
 }
 
 body {
     display: flex;
-    flex-direction: column; // Navbar oben, Content mitte, Footer unten
+    flex-direction: column; 
 }
 
 p, ol li {
@@ -33,26 +31,38 @@ p, ol li {
 
 main {
     width: 100%;
-    max-width: 1100px; // Erhöht für Sidebar + Graph
+    max-width: 1100px; 
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    flex: 1; // Wichtig für die vertikale Streckung
+    flex: 1; 
 }
 
 footer {
-    flex-shrink: 0; // Footer darf nicht zusammengedrückt werden
+    flex-shrink: 0; 
     background-color: $footer-header-bg;
-    height: 60px;
+    height: $footer-header-size;
     border-top: 1px solid rgba($primary, 0.1);
+
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+}
+
+.footer-content {
+    width: 100%;
+    max-width: 1100px; 
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
 }
 
 
 .stats-container {
     display: flex;
     gap: 20px;
-    flex: 1; // Füllt den vertikalen Raum im Main aus
-    min-height: 0; // CSS-Trick: Erlaubt dem Container, kleiner als sein Inhalt zu werden
+    flex: 1; 
+    min-height: 0;
     margin-bottom: 20px;
 
     label {
@@ -67,8 +77,6 @@ footer {
             color: $text-default; 
             cursor: pointer;
 
-            // Das kleine Pfeil-Icon von Bootstrap weiß färben
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ebe8e8' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
 
             &:focus {
                 border-color: $secondary;
@@ -77,7 +85,6 @@ footer {
                 color: $text-default;
             }
             
-            // Die Optionen im Dropdown (wichtig für Chrome/Windows)
             option {
                 background-color: #2b2a2a;
                 color: $text-default;
@@ -85,7 +92,7 @@ footer {
         }
     
     .graph-sidebar {
-        width: 250px; // Etwas breiter für Lesbarkeit
+        width: 250px; 
         flex-shrink: 0;
         background: $footer-header-bg;
         padding: 20px;
@@ -102,17 +109,16 @@ footer {
         flex: 1;
         background: rgba(0,0,0,0.1);
         border-radius: 12px;
-        min-height: 300px; // Kleinerer Mindestwert für kleine Bildschirme
+        min-height: 300px; 
         position: relative; // Wichtig für p5.js Messung
         overflow: hidden;
     }
 }
 
-// Content Stylings
 h1 {
     text-align: center;
     color: $primary;
-    
+    padding-top: 10px;
 }
 
 h3 {
@@ -140,7 +146,7 @@ p {
 }
 
 #content {
-    flex: 1 0 auto; // Nimmt den gesamten verfügbaren Platz ein
+    flex: 1 0 auto;
     padding: 1rem 2rem;
     display: flex;
     flex-direction: column;
@@ -173,29 +179,22 @@ p {
 
 .lead {
     display: flex;
-    justify-content: center; // Zentriert die Liste horizontal im Container
+    justify-content: center; 
     width: 100%;
 
 
     ol {
         display: inline-block;
-        text-align: left; // Die Zahlen bleiben schön untereinander
-        padding-left: 1.5rem; // Platz für die Listenzahlen
-        max-width: 80%; // Verhindert, dass der Text bei langen Fragen zu breit wird
+        text-align: left; 
+        padding-left: 1.5rem; 
+        max-width: 80%; 
 
         li {
             color: $secondary;
             margin-bottom: 2rem;
-            font-size: 1.4rem; // Etwas größer für bessere Lesbarkeit
+            font-size: 1.4rem; 
             line-height: 1.5;
             text-align-last: center; 
-            
-            // Damit der Text innerhalb des List-Items auch zentriert wirkt, 
-            // falls er mehrzeilig ist:
-            &::marker {
-                font-weight: bold;
-                color: $primary;
-            }
         }
     }
 }
@@ -203,7 +202,8 @@ p {
 .navbar {
     border-bottom: 1px solid rgba($primary, 0.2);
     background-color: $footer-header-bg;
-    
+    height: $footer-header-size;
+
     .btn-link {
         text-decoration: none;
         line-height: 0;
@@ -220,24 +220,21 @@ p {
     }
 }
 
-// Matrix Styling (Clean & Minimal)
 .matrix-table {
     border: none !important;
     border-collapse: collapse;
     table-layout: fixed; 
     max-width: 900px;
-    margin: 2rem auto; // Zentriert die Tabelle im verfügbaren Platz
+    margin: 2rem auto;
 
     th, td {
         border: none !important; 
         padding: 1.5rem !important;
         background: transparent !important;
-        text-align: left; // Zentriert den Text IN den Zellen
+        text-align: left; 
         vertical-align: middle;
     }
 
-    // Falls die linke Spalte (KI/Real) rechtsbündig sein soll, 
-    // um näher an den Zahlen zu sein:
     tbody th {
         text-align: center;
         padding-right: 2rem !important;

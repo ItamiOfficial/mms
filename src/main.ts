@@ -97,7 +97,6 @@ const initNavigation = () => {
         const directionClass = newIndex >= state.lastIndex ? 'slide-in-right' : 'slide-in-left';
         target.style.display = 'block';
 
-        // Graphen-Logik triggern
         handleGraphRendering(targetId);
 
         setTimeout(() => target.classList.add(directionClass), 10);
@@ -115,7 +114,6 @@ const initNavigation = () => {
         }
     };
 
-    // Event Listener
     toggleButtons.forEach((button, index) => {
         button.addEventListener('click', (e) => {
             e.preventDefault();
@@ -137,7 +135,6 @@ const initNavigation = () => {
         if (e.key === 'ArrowRight') navigate(1);
     });
 
-    // Start-Sektion aktivieren
     if (toggleButtons.length > 0) toggleButtons[0].click();
 };
 
@@ -261,7 +258,6 @@ const initVideo = () => {
 
 
 
-// Initialisierung beim Laden der Seite
 document.addEventListener('DOMContentLoaded', async () => {
     const success = await loadData();
     if (success) {

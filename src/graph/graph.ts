@@ -121,7 +121,6 @@ export const createGraph = (containerSelector: string, data: GraphData) => {
             container.style.position = 'relative';
             
             renderer = new GraphRenderer(p, data);
-            //p.noLoop(); 
         };
 
         p.draw = () => {
