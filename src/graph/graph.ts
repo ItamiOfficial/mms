@@ -10,7 +10,7 @@ const PALETTES = {
 
 };
 
-let currentColorPalette = PALETTES.earthClay;
+let currentColorPalette = PALETTES.oceanBlue;
 
 
 const calculateAxisTicks = (actualMax: number) => {
@@ -139,7 +139,7 @@ export const createGraph = (containerSelector: string, data: GraphData) => {
 
 
         (p as any).updateData = (newData: GraphData) => {
-            renderer = new GraphRenderer(p, newData);
+            renderer.updateData(newData);
             p.redraw();
         };
 

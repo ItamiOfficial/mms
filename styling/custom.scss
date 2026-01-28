@@ -3,7 +3,8 @@ $secondary: #cbc9ab;
 $primary: #ebe8e8;
 $body-bg: #1b1a1a;
 $text-default: #bab7b2;
-$footer-header-bg: #252423;
+$footer-header-bg: #1b1a1a;
+$glow-color: #171e2a; // Die Farbe für das Zentrum
 // $border-radius: 0.75rem;
 
 // Import Bootstrap
@@ -15,7 +16,8 @@ html, body {
     height: 100%;
     margin: 0;
     color: $text-default;
-    background-color: $body-bg;
+    background: radial-gradient(circle at center, $glow-color 0%, $body-bg 100%);
+    background-attachment: fixed;
     // Wir entfernen overflow: hidden, damit die Seite bei Bedarf scrollen kann
 }
 
@@ -110,7 +112,17 @@ footer {
 h1 {
     text-align: center;
     color: $primary;
-    padding-bottom: 40px;
+    
+}
+
+h3 {
+    text-align: center;
+    color: $secondary;
+    padding-bottom: 50px;
+}
+
+.empty-space {
+    height: 40px;
 }
 
 #graph-description {
@@ -176,6 +188,7 @@ p {
             margin-bottom: 2rem;
             font-size: 1.4rem; // Etwas größer für bessere Lesbarkeit
             line-height: 1.5;
+            text-align-last: center; 
             
             // Damit der Text innerhalb des List-Items auch zentriert wirkt, 
             // falls er mehrzeilig ist:
@@ -203,6 +216,49 @@ p {
         &:disabled {
             color: $secondary !important;
             opacity: 0.3;
+        }
+    }
+}
+
+// Matrix Styling (Clean & Minimal)
+.matrix-table {
+    border: none !important;
+    border-collapse: collapse;
+    table-layout: fixed; 
+    max-width: 900px;
+    margin: 2rem auto; // Zentriert die Tabelle im verfügbaren Platz
+
+    th, td {
+        border: none !important; 
+        padding: 1.5rem !important;
+        background: transparent !important;
+        text-align: left; // Zentriert den Text IN den Zellen
+        vertical-align: middle;
+    }
+
+    // Falls die linke Spalte (KI/Real) rechtsbündig sein soll, 
+    // um näher an den Zahlen zu sein:
+    tbody th {
+        text-align: center;
+        padding-right: 2rem !important;
+    }
+
+    th {
+        font-size: 1.1rem;
+        font-weight: normal;
+        color: $text-default;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    td {
+        font-size: 2rem; 
+        font-weight: bold;
+        color: $secondary;
+        transition: all 0.3s ease;
+        
+        &:not(:empty) {
+            text-shadow: 0 0 16px rgba($secondary, 0.4);
         }
     }
 }

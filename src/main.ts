@@ -5,13 +5,18 @@ import { createGraph, filters } from "./graph/graph";
 import { parseCSV, type Table } from './graph/csv_utils';
 import type { GraphData } from './graph/graphRenderer';
 
+type vote = 'liked' | 'disliked'
+
 const state = {
     csvData: null as Table | null,
     graphData: null as GraphData | null,
     graphInstance: null as p5 | null,
-    lastIndex: 0
+    lastIndex: 0,
+    
+    // Votes
+    currentVote: 0,
+    votes: [] as vote[],
 };
-
 
 async function loadData() {
     try {
@@ -165,8 +170,9 @@ const setupSidebar = () => {
 
         // Graph neu zeichnen
         if (state.graphInstance) {
-            state.graphInstance.remove(); // Alten Sketch sauber beenden
-            state.graphInstance = createGraph('#graph-wrapper', state.graphData!);
+            (state.graphInstance as any).updateData(state.graphData);
+            // state.graphInstance.remove(); // Alten Sketch sauber beenden
+            // state.graphInstance = createGraph('#graph-wrapper', state.graphData!);
         }
 
         // Beschreibung updaten
@@ -184,12 +190,84 @@ const setupSidebar = () => {
     selectFilter.addEventListener('change', updateHandler);
 };
 
+const initVideo = () => {
+    const likeButton = document.getElementById('btn-like') as HTMLButtonElement;
+    const dislikeButton = document.getElementById('btn-dislike') as HTMLBRElement;
+    if (!likeButton || !dislikeButton) return;
+
+    likeButton.addEventListener('click', (e: MouseEvent) => {
+        state.votes.push('liked');
+        updateVideo();
+    });
+    dislikeButton.addEventListener('click', (e: MouseEvent) => {
+        state.votes.push('disliked');
+        updateVideo();
+    });
+
+    const videos = [
+        {isAI: false, src: 'https://www.youtube.com/embed/BQOzdbqP1d4?si=-E83cNfv05Blvltp'},
+        {isAI: false, src: 'https://www.youtube.com/embed/4cMj5SJRJ2o?si=2eKJoAKaiO0Od4eB&amp;'},
+        {isAI: true, src: 'https://www.youtube.com/embed/XDm8wa5Rllk?si=baKDGT2QozGOgGus&amp;'},
+        {isAI: true, src: 'https://www.youtube.com/embed/hlYA9Q8nOrc?si=7GwIBDOJirCE6Jp2&amp;'},
+    ]
+
+    const updateVideo = () => {
+        state.currentVote += 1;
+
+        if (state.currentVote < videos.length) {
+            const frame  = document.getElementById('video-frame') as HTMLIFrameElement;
+            if (frame) {
+                frame.src = videos[state.currentVote].src;
+            }
+        } else {
+            const newView = document.getElementById('test-yourself-results');
+            const oldView = document.getElementById('test-yoursel-questions');
+            const m00 = document.getElementById('m0-0');
+            const m01 = document.getElementById('m0-1');
+            const m10 = document.getElementById('m1-0');
+            const m11 = document.getElementById('m1-1');
+
+            if (newView) {
+                newView.style.display = 'block';
+            }
+            if (oldView) {
+                oldView.style.display = 'none';
+            }
+
+            let ail = 0;
+            let aid = 0;
+            let reall = 0;
+            let reald = 0;
+            state.votes.forEach((v, i) => {
+                if (videos[i].isAI) {
+                    ail += v == 'liked' ? 1 : 0;
+                    aid += v == 'disliked' ? 1 : 0;
+                } else {
+                    reall += v == 'liked' ? 1 : 0;
+                    reald += v == 'disliked' ? 1 : 0;
+                }
+            });
+
+            if (m00) { m00.innerText = (ail / videos.length * 100.0) + '.0 %'; }
+            if (m01) { m01.innerText = (aid / videos.length * 100.0) + '.0 %'; }
+            if (m10) { m10.innerText = (reall / videos.length * 100.0) + '.0 %'; } 
+            if (m11) { m11.innerText = (reald / videos.length * 100.0) + '.0 %'; }
+        }
+    }
+
+    state.currentVote = -1;
+    updateVideo();
+}
+
+
+
 // Initialisierung beim Laden der Seite
 document.addEventListener('DOMContentLoaded', async () => {
     const success = await loadData();
     if (success) {
         setupSidebar();
         initNavigation();
+        initVideo();
     } else {
         const wrapper = document.getElementById('graph-wrapper');
         if (wrapper) wrapper.innerText = "Daten konnten nicht geladen werden.";

@@ -17,10 +17,12 @@
 				</button>
 
 				<div id="nav-container" class="d-flex">
-					<a href="#" class="btn btn-outline-primary btn-sm me-2 section-toggle" data-target="section-fragestellung">Fragestellung</a>
-					<a href="#" class="btn btn-outline-primary btn-sm me-2 section-toggle" data-target="section-methodik">Methodik</a>
-					<a href="#" class="btn btn-outline-primary btn-sm me-2 section-toggle" data-target="section-ergebnisse">Ergebnisse</a>
-					<a href="#" class="btn btn-outline-primary btn-sm section-toggle" data-target="section-resultat">Fazit</a>
+					<a href="#" class="btn btn-outline-primary btn-sm me-3 section-toggle" data-target="section-fragestellung">Fragestellung</a>
+					<a href="#" class="btn btn-outline-primary btn-sm me-3 section-toggle" data-target="section-methodik">Methodik</a>
+					<a href="#" class="btn btn-outline-primary btn-sm me-3 section-toggle" data-target="section-ergebnisse">Ergebnisse</a>
+					<a href="#" class="btn btn-outline-primary btn-sm me-3 section-toggle" data-target="section-resultat">Fazit</a>
+					<a href="#" class="btn btn-outline-primary btn-sm section-toggle" data-target="section-test-your-self">Test Yourself</a>
+
 				</div>
 
 				<button id="next-btn" class="btn btn-link text-primary p-0 ms-3">
@@ -40,6 +42,7 @@
 					Bots für die Nutzbarkeit des Internets 
 					für die Studierenden der Hochschule Fulda? 
 				</h1>
+				<div class="empty-space"></div>
 				<div class="lead">
     				<ol class="text-secondary">
 						<li>Welchen Nutzen ziehen die Studierenden 
@@ -57,11 +60,12 @@
 		</div>
 
 		<!-- Section: Methodik-->
-		<div id="section-methodik" class="content-section" style="display:none;">
+		<div id="section-methodik" class="content-section">
 			<main>
 				<h1>
 					Methodik
 				</h1>
+				<div class="empty-space"></div>
 				<p>
 					Wir stützen uns auf die inhaltliche Analyse von bereits existierenden Studien. 
 					Hierfür haben wir zum Thema passende Arbeiten ausgewählt und durchgearbeitet. 
@@ -80,9 +84,10 @@
 		</div>
 
 		<!-- Section: Ergebnisse-->
-		<div id="section-ergebnisse" class="content-section" style="display:none;">
+		<div id="section-ergebnisse" class="content-section">
 			<main>
 				<h1>Ergebnisse</h1>	
+				<div class="empty-space"></div>
 				<h5 id="graph-description">Hallo</h5>
 
 				<div class="stats-container">
@@ -111,9 +116,68 @@
 		</div>
 
 		<!-- Section: Resultat-->
-		<div id="section-resultat" class="content-section" style="display:none;">
+		<div id="section-resultat" class="content-section">
 			<main>
-				<h1>Fazit</h1>
+				<h1>Stirbt das Internet wirklich aus?</h1>
+				<div class="empty-space"></div>
+				<p>
+					Künstliche Intelligenz ist sowohl im Privatleben, als auch in der Hochschule, Begleiter der
+					Studierendenschaft. Ob dieser Begleiter nützlich oder hinderlich ist kommt auf die Nutzung
+					an. Während im Hochschulalltag die positiven Seiten hervorkommen sind die beobachtungen
+					im privaten Raum (Social Media/KI generierte Medieninhalte) deutlich negativer.
+				</p>
+				<p>
+					Zumindest im Hochschulalltag ziehen die Studierenden nutzen aus KI. Zeitersparnisse durch
+					Zusammenfassungen oder Text-Korrekturen, die Möglichkeit Fragen über Lernstoff zu stellen, 
+					ohne den Dozenten, oder Mitstudierende, fragen zu müssen, oder das Vorbereiten für
+					Klausuren sind für viele Studierende Vorteile, die ihnen im Studium helfen. KI generierte
+					Medieninhalte sind allerdings für viele eher uninterressant und/oder behindernd/störend. Von
+					daher gibt es negative Auswirkungen. Hierzu sollte in andere Bereiche weiter geforscht werden.
+					Zum Beispiel welche Auswirkungen KI generierte Inhalte auf den Disskurs auf Social Media
+					Plattformen haben und in wie weit KI-Inhalte eine gefährdung für den politische Diskurs und
+					die Demokratie darstellen.
+				</p>
+			</main>
+		</div>
+
+		<div id="section-test-your-self" class="content-section">
+			<main id="test-yoursel-questions">
+				<h1>Test Yourself!</h1>
+				<h3>Mach das Video Ranking und erkenne wie sehr du KI Hasst!</h3>
+				<div id="video-frame-container" class="container d-flex justify-content-center">
+					<iframe id="video-frame" width="560" height="315" src="https://www.youtube.com/embed/7CC-MkNze2Q?si=JsF4i2YGHu2klUni&amp;" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+				</div>
+				<div id="rating-button-container" class="container d-flex justify-content-center my-3 gap-5">
+					<button id="btn-like" style="width: 200px;" type="button" class="btn btn-success">Gefällt Dir</button>
+					<button id="btn-dislike" style="width: 200px;" type="button" class="btn btn-danger">Gefällt Dir Nicht</button>
+				</div>
+			</main>
+			<main id="test-yourself-results" style="display: none;">
+				<h1>Test Results</h1>
+				<h3>Lets see how many AI Videos you liked</h3>
+				<div class="matrix-container my-4 container d-flex justify-content-center">
+					<table class="table table-borderlesstext-center align-middle matrix-table">
+						<thead>
+							<tr>
+								<th></th> 
+								<th class="text-secondary">Gefällt</th>
+								<th class="text-secondary">Gefällt nicht</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th class="text-secondary th-left">KI</th>
+								<td id="m0-0" class="drop-zone text-secondary"></td>
+								<td id="m0-1" class="drop-zone text-secondary"></td>
+							</tr>
+							<tr>
+								<th class="text-secondary th-left">Real</th>
+								<td id="m1-0" class="drop-zone text-secondary"></td>
+								<td id="m1-1" class="drop-zone text-secondary"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</main>
 		</div>
 	</div>

@@ -81,6 +81,15 @@ export class GraphRenderer {
         textSize: 13,
     }
 
+    // === Section: Animation === \\
+    private animationState: Map<string, number> = new Map();
+    private lerpSpeed = 0.1;
+
+    public updateData(newData: GraphData) {
+        this.data = newData;
+        //this.syncAnimatedValues();
+    }
+
     // === Section: Constructors === \\
     public constructor(
         p: p5, 
@@ -219,9 +228,21 @@ export class GraphRenderer {
 
             gt.values.forEach((v, i) => {
                 let preMin = gt.valueRange.min;
-                v.valueParams.forEach((params) => {
+
+                v.valueParams.forEach((params, j) => {
+                    const identifier = `${v.name}_${params.name}`;
+                    if (!this.animationState.has(identifier)) {
+                        this.animationState.set(identifier, 0);
+                    }
+
+                    let currentVal = this.animationState.get(identifier)!;
+                    const targetVal = params.value;
+
+                    currentVal = this.p.lerp(currentVal, targetVal, this.lerpSpeed);
+                    this.animationState.set(identifier, currentVal);
+
                     const pX = this.calculateValueSpaceX(i, -1, gt.values.length);
-                    const pY = this.calculateValueSpaceY(params.value + preMin, gt.valueRange.min, gt.valueRange.max);
+                    const pY = this.calculateValueSpaceY(currentVal + preMin, gt.valueRange.min, gt.valueRange.max);
                     const deltaY = this.calculateValueSpaceY(preMin, gt.valueRange.min, gt.valueRange.max);
 
                     const box: Box = {
@@ -234,7 +255,7 @@ export class GraphRenderer {
                     this.p.rectMode(this.p.CORNERS);
                     this.p.fill(params.color);
                     this.p.rect(box.x0, box.y0, box.x1, box.y1);
-                    preMin += params.value;
+                    preMin += currentVal;
 
                     if (boxToPointCollision(box, {x: this.p.mouseX, y: this.p.mouseY})) {
                         infoBoxBox = box;
