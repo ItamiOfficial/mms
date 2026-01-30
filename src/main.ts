@@ -245,10 +245,13 @@ const initVideo = () => {
                 }
             });
 
-            if (m00) { m00.innerText = (ail / videos.length * 100.0) + '.0 %'; }
-            if (m01) { m01.innerText = (aid / videos.length * 100.0) + '.0 %'; }
-            if (m10) { m10.innerText = (reall / videos.length * 100.0) + '.0 %'; } 
-            if (m11) { m11.innerText = (reald / videos.length * 100.0) + '.0 %'; }
+            const aiSum = videos.filter(v => v.isAI == true).length;
+            const realSum = videos.length - aiSum;
+
+            if (m00) { m00.innerText = (ail / aiSum * 100.0) + '.0 %'; }
+            if (m01) { m01.innerText = (aid / aiSum * 100.0) + '.0 %'; }
+            if (m10) { m10.innerText = (reall / realSum * 100.0) + '.0 %'; } 
+            if (m11) { m11.innerText = (reald / realSum * 100.0) + '.0 %'; }
         }
     }
 
