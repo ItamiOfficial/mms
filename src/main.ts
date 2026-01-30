@@ -4,6 +4,7 @@ import p5 from 'p5';
 import { createGraph, filters } from "./graph/graph";
 import { parseCSV, type Table } from './graph/csv_utils';
 import type { GraphData } from './graph/graphRenderer';
+import { easing } from './utilites/easing';
 
 type vote = 'liked' | 'disliked'
 
@@ -20,6 +21,7 @@ const state = {
     // Audio
     currentAudio: null as HTMLAudioElement | null,
     isPlaying: false as boolean,
+    volume: 0.3,
 };
 
 async function loadData() {
@@ -51,16 +53,19 @@ async function loadData() {
 
 const playAudio = (pageID: string) => {
     const audioFiles: Record<string, string> = {
-        'section-fragestellung': '../sound/Test.wav',
-        'section-methodik': '../sound/Test.wav',
-        'section-resultat': '../sound/Test.wav',
+        'section-fragestellung': '../sound/section_fragestellung.mp3',
+        'section-methodik': '../sound/section_methodik.mp3',
+        'section-resultat': '../sound/section_fazit.mp3',
     };
+
 
     const audioPath = audioFiles[pageID];
 
     if (state.currentAudio) {
         state.currentAudio.pause();
         state.currentAudio.currentTime = 0;
+        state.isPlaying = false;
+        updateAudioIcon();
     }
 
     if (!audioPath) {
@@ -69,15 +74,15 @@ const playAudio = (pageID: string) => {
     }
 
     state.currentAudio = new Audio(audioPath);
+    state.currentAudio.volume = easing.InQuad(state.volume);
+
+    state.isPlaying = false;
+    updateAudioIcon();
 
     state.currentAudio.onended = () => {
         state.isPlaying = false;
         updateAudioIcon();
     };
-
-    if (state.isPlaying) {
-        state.currentAudio.play().catch(e => console.warn("Autoplay blockiert:", e));
-    }
 };
 
 const updateAudioIcon = () => {
@@ -97,16 +102,33 @@ const initAudioControls = () => {
     const audioBtn = document.getElementById('audio-toggle-btn');
 
     audioBtn?.addEventListener('click', () => {
-        state.isPlaying = !state.isPlaying;
+        if (!state.currentAudio) return; 
 
-        if (state.isPlaying) {
-            state.currentAudio?.play().catch(() => {
-                console.log("Interaktion erforderlich");
-            });
+        if (state.currentAudio.paused) {
+            state.isPlaying = true;
+            state.currentAudio.play().catch(e => console.warn("Abspielen fehlgeschlagen:", e));
         } else {
-            state.currentAudio?.pause();
+            state.isPlaying = false;
+            state.currentAudio.pause();
         }
         updateAudioIcon();
+    });
+};
+
+const initVolumeControl = () => {
+    const volumeSlider = document.getElementById('volume-slider') as HTMLInputElement;
+
+    if (!volumeSlider) return;
+
+    volumeSlider.addEventListener('input', (e) => {
+        const target = e.target as HTMLInputElement;
+        const newVolume = parseFloat(target.value);
+        
+        state.volume = newVolume;
+
+        if (state.currentAudio) {
+            state.currentAudio.volume = easing.InQuad(newVolume);
+        }
     });
 };
 
@@ -334,6 +356,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         initNavigation();
         initVideo();
         initAudioControls();
+        initVolumeControl();
     } else {
         const wrapper = document.getElementById('graph-wrapper');
         if (wrapper) wrapper.innerText = "Daten konnten nicht geladen werden.";

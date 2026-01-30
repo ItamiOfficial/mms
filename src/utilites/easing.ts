@@ -9,4 +9,5 @@ export const easing: Record<string, (x:number) => number> = {
     InQuint : (x) => x * x * x * x * x,
     OutQuad: (x) => 1 - (1 - x) * (1 - x),
     InQuad : (x) => x * x,
+    InExpo : (x) => x === 0 ? 0 : Math.pow(2, 10 * x - 10),
 }

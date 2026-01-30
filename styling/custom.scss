@@ -283,3 +283,12 @@ p {
         opacity: 0.6;
     }
 }
+
+#volume-slider {
+    width: 80px;
+    height: 5px;
+    cursor: pointer;
+    accent-color: #0d6efd; // Bootstrap Primärfarbe
+    vertical-align: middle;
+    margin-left: 10px;
+}
