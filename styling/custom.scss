@@ -4,7 +4,7 @@ $body-bg: #1b1a1a;
 $text-default: #bab7b2;
 $footer-header-bg: #1b1a1a;
 $glow-color: #171e2a;
-$footer-header-size: 70px;
+$footer-header-size: 60px;
 
 // Import Bootstrap
 @import "../node_modules/bootstrap/scss/bootstrap";
@@ -203,6 +203,12 @@ p {
     border-bottom: 1px solid rgba($primary, 0.2);
     background-color: $footer-header-bg;
     height: $footer-header-size;
+    min-height: $footer-header-size;
+
+    .container-fluid {
+        display: flex;
+        justify-content: space-between;
+    }
 
     .btn-link {
         text-decoration: none;
@@ -257,5 +263,23 @@ p {
         &:not(:empty) {
             text-shadow: 0 0 16px rgba($secondary, 0.4);
         }
+    }
+}
+
+#audio-toggle-btn {
+    outline: none;
+    box-shadow: none;
+    transition: all 0.2s ease;
+
+    margin-left: auto; 
+    padding-right: 15px;
+
+    &:hover {
+        transform: scale(1.1);
+        color: $primary !important;
+    }
+
+    .bi-volume-mute-fill {
+        opacity: 0.6;
     }
 }

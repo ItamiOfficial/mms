@@ -9,8 +9,12 @@
 </head>
 
 <body>
-	<nav class="navbar navbar-expand-lg  mb-4 sticky-top">
-			<div class="d-flex align-items-center mx-auto">
+	<nav class="navbar navbar-expand-lg mb-4 sticky-top">
+		<div class="container-fluid d-flex align-items-center">
+			
+			<div class="flex-1 d-none d-lg-block" style="flex: 1;"></div>
+
+			<div class="d-flex align-items-center justify-content-center">
 				<button id="prev-btn" class="btn btn-link text-primary p-0 me-3">
 					<i class="bi bi-arrow-left-circle-fill fs-3"></i>
 				</button>
@@ -21,7 +25,6 @@
 					<a href="#" class="btn btn-outline-primary btn-sm me-3 section-toggle" data-target="section-ergebnisse">Ergebnisse</a>
 					<a href="#" class="btn btn-outline-primary btn-sm me-3 section-toggle" data-target="section-resultat">Fazit</a>
 					<a href="#" class="btn btn-outline-primary btn-sm section-toggle" data-target="section-test-your-self">Test Yourself</a>
-
 				</div>
 
 				<button id="next-btn" class="btn btn-link text-primary p-0 ms-3">
@@ -29,7 +32,12 @@
 				</button>
 			</div>
 
-
+			<div class="d-flex justify-content-end align-items-center" style="flex: 1;">
+				<button id="audio-toggle-btn" class="btn btn-link text-secondary p-0 me-3">
+					<i id="audio-icon" class="bi bi-volume-mute-fill fs-3"></i>
+				</button>
+			</div>
+			
 		</div>
 	</nav>
 
@@ -37,19 +45,19 @@
 		<!-- Section: Fragestellung-->
 		<div id="section-fragestellung" class="content-section">
 			<main>
-				<h1> Welche Auswirkungen haben KI und 
-					Bots für die Nutzbarkeit des Internets 
-					für die Studierenden der Hochschule Fulda? 
+				<h1> Welche Auswirkungen haben KI und
+					Bots für die Nutzbarkeit des Internets
+					für die Studierenden der Hochschule Fulda?
 				</h1>
 				<div class="empty-space"></div>
 				<div class="lead">
-    				<ol class="text-secondary">
-						<li>Welchen Nutzen ziehen die Studierenden 
+					<ol class="text-secondary">
+						<li>Welchen Nutzen ziehen die Studierenden
 							der Hochschule Fulda aus Chat-Bots in ihrem
 							Hochschulalltag?
 						</li>
-						<li> 
-							Wie ist die Erkennbarkeit von KI und die Verlässligkeit 
+						<li>
+							Wie ist die Erkennbarkeit von KI und die Verlässligkeit
 							auf KI, von den Studierenden der
 							Hochschule Fulda einzuschätzen?
 						</li>
@@ -66,18 +74,35 @@
 				</h1>
 				<div class="empty-space"></div>
 				<p>
-					Wir stützen uns auf die inhaltliche Analyse von bereits existierenden Studien. 
-					Hierfür haben wir zum Thema passende Arbeiten ausgewählt und durchgearbeitet. 
-					Im Anschluss führen wir eine Befragung mittels Online-Survey durch, um quantitative Daten zu erhalten. 
+					Für die konzeptionelle Grundlage des Papers wird sich auf eine inhaltliche Analyse bereits
+					existierender Studien gestützt. Hierfür wurden thematisch relevante wissenschaftliche Arbeiten
+					ausgewählt, systematisch bewertet und hinsichtlich ihrer zentralen Ergebnisse sowie theoretischen
+					Ansätze untersucht. Diese Literaturrecherche bildet die Basis für die anschließende Erhebung
+					empirischer Daten.
 				</p>
 				<p>
-					Da die Zielgruppe unserer Studie die Studierenden der Hochschule Fulda sind, werden eben nur diese befragt. 
-					Die Teilnehmer:innen geben ihr Alter, Geschlecht, ihren Fachbereich und ihr Fachsemester an; die Erhebung erfolgt anonym. 
-					Der Fragebogen behandelt das Empfinden verschiedener Emotionen der Teilnehmer:innen im Netz und wie sich dieses seit der 
-					breiten Verfügbarkeit von KI-Tools verändert hat.
+					Im empirischen Teil wurde eine quantitative Befragung mithilfe eines Online-Surveys durchgeführt.
+					Die Zielgruppe der Studie umfasst ausschließlich Studierende der Hochschule Fulda, weshalb nur diese
+					zur Teilnahme eingeladen werden. Die Teilnahme erfolgt anonym. Zum Abschluss der Befragung gaben die
+					Studierenden soziodemografische Angaben zu Alter, Geschlecht, Fachbereich und Fachsemester an. Es
+					muss berücksichtigt werden, dass der Fragebogen die Wahrnehmung der Studierenden abfragt und damit
+					subjektive Daten erhoben werden.
 				</p>
 				<p>
-					Aufgrund der Distributionslogistik ist es nicht ausgeschlossen, dass Teilnehmer:innen mehrmals den Fragebogen einreichen. 
+					Der Fragebogen umfasst mehrere Themenblöcke. Ein Schwerpunkt liegt auf der Nutzung von Chatbots: Die
+					Teilnehmer*innen wurden gefragt, wie häufig und in welchen Kontexten sie Chatbots einsetzen, welche
+					Aufgaben sie damit bearbeiten und welche Erfahrungen sie dabei gemacht haben. Ein weiterer
+					Themenbereich betrifft den Konsum und die Bewertung von KI-generierten Medieninhalten. Hierbei wude
+					erhoben, in welchem Ausmaß Studierende KI-basierte Inhalte wahrnehmen, wie sie diese einschätzen und
+					welche Erfahrungen sie insbesondere mit Videoinhalten auf Social-Media-Plattformen wie TikTok,
+					YouTube oder Instagram gemacht haben. Alle Fragen im Fragebogen mussten beantwortet werden, wobei es
+					bei einigen Fragen offene Antwortmöglichkeiten gab.
+				</p>
+				<p>
+					Aufgrund der gewählten Distributionsform über ein anonymes Online-Formular (Google Formulare) kann
+					nicht vollständig ausgeschlossen werden, dass einzelne Teilnehmer*innen den Fragebogen mehrfach
+					ausgefüllt haben. Um eine möglichst breite und diverse Stichprobe zu erreichen, wurde die Umfrage
+					über mehrere Gruppenchats der verschiedenen Fachbereiche verbreitet.
 				</p>
 			</main>
 		</div>
@@ -85,7 +110,7 @@
 		<!-- Section: Ergebnisse-->
 		<div id="section-ergebnisse" class="content-section">
 			<main>
-				<h1>Ergebnisse</h1>	
+				<h1>Ergebnisse</h1>
 				<div class="empty-space"></div>
 				<h5 id="graph-description">Hallo</h5>
 
@@ -95,21 +120,21 @@
 							<label for="select-category">Hauptmetrik </label>
 							<select id="select-category" class="form-select"></select>
 						</div>
-						
+
 						<div class="control-group">
 							<label for="select-filter">Gruppieren (Stack)</label>
 							<select id="select-filter" class="form-select"></select>
 						</div>
 
 						<hr>
-						
+
 						<div class="info-box">
 							<small id="graph-info">Wähle Spalten aus, um die Korrelation zu analysieren.</small>
 						</div>
 					</aside>
 
 					<main id="graph-wrapper">
-						</main>
+					</main>
 				</div>
 			</main>
 		</div>
@@ -120,21 +145,24 @@
 				<h1>Stirbt das Internet wirklich aus?</h1>
 				<div class="empty-space"></div>
 				<p>
-					Künstliche Intelligenz ist sowohl im Privatleben, als auch in der Hochschule, Begleiter der
-					Studierendenschaft. Ob dieser Begleiter nützlich oder hinderlich ist kommt auf die Nutzung
-					an. Während im Hochschulalltag die positiven Seiten hervorkommen sind die beobachtungen
-					im privaten Raum (Social Media/KI generierte Medieninhalte) deutlich negativer.
+					Künstliche Intelligenz ist sowohl im Privatleben als auch in der Hochschule Begleiter der
+					Studierendenschaft. Ob dieser Begleiter nützlich oder hinderlich ist, kommt auf die Art der Nutzung
+					an. Sollte KI als unterstützendes Tool und nicht als Ersatz für eine selbstständig angefertigte
+					Leistung verstanden werden, scheint es möglich die positiven Seiten von KI zu nutzen (Effizienz- und
+					Produktivitätssteigerung). Während im Hochschulalltag die positiven Seiten hervorkommen, sind die
+					Beobachtungen im privaten Raum (Social Media/KI generierte Medieninhalte) deutlich negativer.
 				</p>
 				<p>
-					Zumindest im Hochschulalltag ziehen die Studierenden nutzen aus KI. Zeitersparnisse durch
-					Zusammenfassungen oder Text-Korrekturen, die Möglichkeit Fragen über Lernstoff zu stellen, 
-					ohne den Dozenten, oder Mitstudierende, fragen zu müssen, oder das Vorbereiten für
-					Klausuren sind für viele Studierende Vorteile, die ihnen im Studium helfen. KI generierte
-					Medieninhalte sind allerdings für viele eher uninterressant und/oder behindernd/störend. Von
-					daher gibt es negative Auswirkungen. Hierzu sollte in andere Bereiche weiter geforscht werden.
-					Zum Beispiel welche Auswirkungen KI generierte Inhalte auf den Disskurs auf Social Media
-					Plattformen haben und in wie weit KI-Inhalte eine gefährdung für den politische Diskurs und
-					die Demokratie darstellen.
+					Zumindest im Hochschulalltag ziehen Studierende einen klaren Nutzen aus dem Einsatz von KI. Die
+					Möglichkeit, Fragen zum Lernstoff an eine KI zu richten, anstatt sich an Dozierende oder
+					Mitstudierende wenden zu müssen, wird von vielen Studierenden als Vorteil wahrgenommen. Darüber
+					hinaus wird die Zeitersparnis durch Funktionen wie Zusammenfassungen oder Textkorrekturen als
+					hilfreich eingeschätzt. KI dient zudem als unterstützendes Hilfsmittel bei der Klausurvorbereitung.
+					KI-generierte Medieninhalte werden hingegen von vielen Studierenden als eher uninteressant und/oder
+					störend empfunden. Zudem bergen sie Risiken im Hinblick auf den intransparenten Umgang mit Quellen.
+					In diesem Zusammenhang besteht weiterer Forschungsbedarf, insbesondere zu den Auswirkungen
+					KI-generierter Inhalte auf den Diskurs in sozialen Medien sowie zu der Frage, inwieweit solche
+					Inhalte eine Gefährdung für den politischen Diskurs und demokratische Prozesse darstellen können.
 				</p>
 			</main>
 		</div>
@@ -144,11 +172,17 @@
 				<h1>Test Yourself!</h1>
 				<h3>Mach das Video Ranking und erkenne wie sehr du KI Hasst!</h3>
 				<div id="video-frame-container" class="container d-flex justify-content-center">
-					<iframe id="video-frame" width="560" height="315" src="https://www.youtube.com/embed/7CC-MkNze2Q?si=JsF4i2YGHu2klUni&amp;" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+					<iframe id="video-frame" width="560" height="315"
+						src="https://www.youtube.com/embed/7CC-MkNze2Q?si=JsF4i2YGHu2klUni&amp;"
+						title="YouTube video player" frameborder="0"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+						referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 				</div>
 				<div id="rating-button-container" class="container d-flex justify-content-center my-3 gap-5">
-					<button id="btn-like" style="width: 200px;" type="button" class="btn btn-success">Gefällt Dir</button>
-					<button id="btn-dislike" style="width: 200px;" type="button" class="btn btn-danger">Gefällt Dir Nicht</button>
+					<button id="btn-like" style="width: 200px;" type="button" class="btn btn-success">Gefällt
+						Dir</button>
+					<button id="btn-dislike" style="width: 200px;" type="button" class="btn btn-danger">Gefällt Dir
+						Nicht</button>
 				</div>
 			</main>
 			<main id="test-yourself-results" style="display: none;">
@@ -158,7 +192,7 @@
 					<table class="table table-borderlesstext-center align-middle matrix-table">
 						<thead>
 							<tr>
-								<th></th> 
+								<th></th>
 								<th class="text-secondary">Gefällt</th>
 								<th class="text-secondary">Gefällt nicht</th>
 							</tr>
@@ -185,7 +219,9 @@
 	<footer class="">
 		<div class="footer-content">
 			<div><a class="text-reset" href="https://forms.gle/dPxbQRtEkoaMBhRC7"> Formular (Kopie)</a></div>
-			<div><a class="text-reset" href="https://docs.google.com/spreadsheets/d/1DTj0n54bbfVBOPzegcfuzZNaOBP8rov7QO9IBUpdaLY/edit?usp=sharing"> Datenblatt </a></div>
+			<div><a class="text-reset"
+					href="https://docs.google.com/spreadsheets/d/1DTj0n54bbfVBOPzegcfuzZNaOBP8rov7QO9IBUpdaLY/edit?usp=sharing">
+					Datenblatt </a></div>
 		</div>
 	</footer>
 

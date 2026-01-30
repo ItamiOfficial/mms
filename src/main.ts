@@ -16,6 +16,10 @@ const state = {
     // Votes
     currentVote: 0,
     votes: [] as vote[],
+
+    // Audio
+    currentAudio: null as HTMLAudioElement | null,
+    isPlaying: false as boolean,
 };
 
 async function loadData() {
@@ -45,6 +49,66 @@ async function loadData() {
     }
 }
 
+const playAudio = (pageID: string) => {
+    const audioFiles: Record<string, string> = {
+        'section-fragestellung': '../sound/Test.wav',
+        'section-methodik': '../sound/Test.wav',
+        'section-resultat': '../sound/Test.wav',
+    };
+
+    const audioPath = audioFiles[pageID];
+
+    if (state.currentAudio) {
+        state.currentAudio.pause();
+        state.currentAudio.currentTime = 0;
+    }
+
+    if (!audioPath) {
+        state.currentAudio = null;
+        return;
+    }
+
+    state.currentAudio = new Audio(audioPath);
+
+    state.currentAudio.onended = () => {
+        state.isPlaying = false;
+        updateAudioIcon();
+    };
+
+    if (state.isPlaying) {
+        state.currentAudio.play().catch(e => console.warn("Autoplay blockiert:", e));
+    }
+};
+
+const updateAudioIcon = () => {
+    const audioIcon = document.getElementById('audio-icon');
+    if (!audioIcon) return;
+
+    if (state.isPlaying) {
+        audioIcon.classList.remove('bi-volume-mute-fill');
+        audioIcon.classList.add('bi-volume-up-fill');
+    } else {
+        audioIcon.classList.remove('bi-volume-up-fill');
+        audioIcon.classList.add('bi-volume-mute-fill');
+    }
+};
+
+const initAudioControls = () => {
+    const audioBtn = document.getElementById('audio-toggle-btn');
+
+    audioBtn?.addEventListener('click', () => {
+        state.isPlaying = !state.isPlaying;
+
+        if (state.isPlaying) {
+            state.currentAudio?.play().catch(() => {
+                console.log("Interaktion erforderlich");
+            });
+        } else {
+            state.currentAudio?.pause();
+        }
+        updateAudioIcon();
+    });
+};
 
 const handleGraphRendering = (targetId: string) => {
     if (targetId !== 'section-ergebnisse' || !state.graphData) return;
@@ -93,6 +157,8 @@ const initNavigation = () => {
 
         const target = document.getElementById(targetId);
         if (!target) return;
+
+        playAudio(targetId);
 
         const directionClass = newIndex >= state.lastIndex ? 'slide-in-right' : 'slide-in-left';
         target.style.display = 'block';
@@ -267,6 +333,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         setupSidebar();
         initNavigation();
         initVideo();
+        initAudioControls();
     } else {
         const wrapper = document.getElementById('graph-wrapper');
         if (wrapper) wrapper.innerText = "Daten konnten nicht geladen werden.";
